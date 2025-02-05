@@ -10,7 +10,7 @@ import {
 } from "react-native";
 import CustomText from "@/components/CustomText";
 import { Picker } from "@react-native-picker/picker";
-
+import SERVER_ADDRESS from "@/config";
 import { useRouter, Stack } from "expo-router";
 import Toast from "react-native-toast-message"; // Add Toast library
 
@@ -35,6 +35,37 @@ const SignInScreen = () => {
       created_at: currentDateTime,
       updated_at: currentDateTime,
     };
+    try {
+      const response = await fetch(`${SERVER_ADDRESS}/auth/login`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(credentials),
+      });
+
+      if (!response.ok) {
+        throw new Error("Registration Failed");
+      }
+
+      const data = await response.json();
+      Toast.show({
+        type: "success",
+        position: "top",
+        text1: data.message,
+      });
+      // console.error(apiKey);
+
+      // router.push("/"); // Navigate to the next screen after successful login
+    } catch (error) {
+      console.error("Login error:", error);
+      Toast.show({
+        type: "error",
+        position: "top",
+        text1: "Sign Up Failed",
+        text2: "Server Error Occured !"
+      });
+    }
   };
 
   return (

@@ -10,6 +10,7 @@ import {
 import CustomText from "@/components/CustomText";
 import { useRouter } from "expo-router";
 import Toast from "react-native-toast-message"; // Add Toast library
+import SERVER_ADDRESS from "@/config";
 
 const SignInScreen = () => {
   const router = useRouter();
@@ -18,12 +19,12 @@ const SignInScreen = () => {
 
   const handleSignIn = async () => {
     const credentials = {
-      nsbmMail: mail,
+      email: mail,
       password: password,
     };
 
     try {
-      const response = await fetch("http://192.168.134.231:5000/auth/login", {
+      const response = await fetch(`${SERVER_ADDRESS}/auth/login`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -52,8 +53,7 @@ const SignInScreen = () => {
       Toast.show({
         type: "error",
         position: "top",
-        text1: "Login Failed",
-        text2: error.message,
+        text1: "Login Failed"
       });
     }
   };
