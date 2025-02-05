@@ -6,67 +6,57 @@ import {
   TouchableOpacity,
   StyleSheet,
   Image,
+  TextProps
 } from "react-native";
 import CustomText from "@/components/CustomText";
-import { useRouter } from "expo-router";
+import { Picker } from "@react-native-picker/picker";
+
+import { useRouter, Stack } from "expo-router";
 import Toast from "react-native-toast-message"; // Add Toast library
 
 const SignInScreen = () => {
   const router = useRouter();
   const [mail, setMail] = useState("");
+  const [name, setName] = useState("");
   const [password, setPassword] = useState("");
+  const [signType, setSignType] = useState("");
+  const [phone, setPhoneNo] = useState("");
+
 
   const handleSignIn = async () => {
+    const currentDateTime = new Date().toISOString();
     const credentials = {
-      nsbmMail: mail,
+      full_name: name,
+      email: mail,
       password: password,
+      phone_number: phone,
+      user_type: signType,
+      profile_picture: "https://www.vhv.rs/dpng/d/505-5058560_person-placeholder-image-free-hd-png-download.png",
+      created_at: currentDateTime,
+      updated_at: currentDateTime
     };
 
-    try {
-      const response = await fetch("http://192.168.134.231:5000/auth/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(credentials),
-      });
-
-      if (!response.ok) {
-        throw new Error("Login failed");
-      }
-
-      const data = await response.json();
-      const apiKey = data.access_token;
-      await AsyncStorage.setItem("apiKey", apiKey);
-      Toast.show({
-        type: "success",
-        position: "top",
-        text1: "API Key",
-        text2: apiKey,
-      });
-      // console.error(apiKey);
-
-      // router.push("/"); // Navigate to the next screen after successful login
-    } catch (error) {
-      console.error("Login error:", error);
-      Toast.show({
-        type: "error",
-        position: "top",
-        text1: "Login Failed",
-        text2: error.message,
-      });
-    }
+    
   };
 
   return (
     <View style={styles.container}>
+      <Stack.Screen options={{ headerShown: false }} /> 
       <Image
         source={require("../../assets/images/nsbm_logo.png")}
         style={styles.logo}
       />
-      <CustomText style={styles.title}>Sign In</CustomText>
+      <CustomText style={styles.title}>Sign Up</CustomText>
 
       <View style={styles.form}>
+      <CustomText style={styles.label}>Full Name: </CustomText>
+        <TextInput
+          style={styles.input}
+          placeholder="Enter Name Here"
+          value={name}
+          onChangeText={setName}
+        />
+        
         <CustomText style={styles.label}>NSBM Email</CustomText>
         <TextInput
           style={styles.input}
@@ -84,25 +74,34 @@ const SignInScreen = () => {
           onChangeText={setPassword}
         />
 
+        <CustomText style={styles.label}>Phone Number</CustomText>
+        <TextInput
+          style={styles.input}
+          placeholder="+94"
+          value={phone}
+          onChangeText={setPhoneNo}
+        />
+
+        <CustomText style={styles.label}>Are you a Student or a Lecturer?</CustomText>
+        <View style={styles.pickerContainer}>
+          <Picker
+            selectedValue={signType}
+            onValueChange={(itemValue) => setSignType(itemValue)}
+            style={styles.picker}
+          >
+            <Picker.Item style={styles.pickerItem} label="Student" value="Student" />
+            <Picker.Item style={styles.pickerItem} label="Lecturer" value="Lecturer" />
+          </Picker>
+        </View>
+      
         <View style={styles.buttonContainer}>
           <TouchableOpacity
             style={[styles.button, styles.signInButton]}
             onPress={handleSignIn} // Trigger the login process
           >
-            <CustomText style={styles.buttonText}>Sign In</CustomText>
-          </TouchableOpacity>
-
-          <TouchableOpacity
-            style={[styles.button, styles.googleButton]}
-            onPress={() => router.push("/")}
-          >
-            <CustomText style={styles.googlebuttonText}>Microsoft Login</CustomText>
+            <CustomText style={styles.buttonText}>Sign Up</CustomText>
           </TouchableOpacity>
         </View>
-
-        <TouchableOpacity>
-          <CustomText style={styles.forgotPassword}>Forgot Password?</CustomText>
-        </TouchableOpacity>
       </View>
 
       {/* Add Toast container */}
@@ -127,7 +126,7 @@ const styles = StyleSheet.create({
     marginTop: 100,
     marginBottom: 50,
     fontSize: 44,
-    fontWeight: "300",
+    fontWeight: "200",
     color: "#ffffff",
     marginVertical: 10,
   },
@@ -149,9 +148,9 @@ const styles = StyleSheet.create({
   input: {
     backgroundColor: "#ffffff",
     padding: 10,
-    fontSize: 30,
+    fontSize: 20,
     fontStyle: "italic",
-    fontWeight: "100",
+    fontWeight: "200",
     borderRadius: 8,
     marginBottom: 15,
   },
@@ -190,6 +189,19 @@ const styles = StyleSheet.create({
     marginTop: 15,
     fontWeight: "200",
     fontSize: 14,
+  },
+  pickerContainer: {
+    borderWidth: 1,
+    borderColor: '#ccc',
+    backgroundColor: '#AFD9AF',
+    borderRadius: 10,
+  },
+  picker: {
+    height: 50,
+    width: '100%',
+  },
+  pickerItem: {
+    fontWeight: '200'
   },
 });
 

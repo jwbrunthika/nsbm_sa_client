@@ -45,6 +45,11 @@ export default function HomeScreen() {
               isLoggedIn Tripped: Redirect to log in
             </ThemedText>
           </Link>
+          <Link href="/(auth)/sign-up" style={styles.link}>
+            <ThemedText type="link">
+              isLoggedIn Tripped: Redirect to Signup
+            </ThemedText>
+          </Link>
         </ThemedView>
       </>
     );
