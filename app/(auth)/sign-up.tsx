@@ -6,7 +6,7 @@ import {
   TouchableOpacity,
   StyleSheet,
   Image,
-  TextProps
+  TextProps,
 } from "react-native";
 import CustomText from "@/components/CustomText";
 import { Picker } from "@react-native-picker/picker";
@@ -22,7 +22,6 @@ const SignInScreen = () => {
   const [signType, setSignType] = useState("");
   const [phone, setPhoneNo] = useState("");
 
-
   const handleSignIn = async () => {
     const currentDateTime = new Date().toISOString();
     const credentials = {
@@ -31,17 +30,16 @@ const SignInScreen = () => {
       password: password,
       phone_number: phone,
       user_type: signType,
-      profile_picture: "https://www.vhv.rs/dpng/d/505-5058560_person-placeholder-image-free-hd-png-download.png",
+      profile_picture:
+        "https://www.vhv.rs/dpng/d/505-5058560_person-placeholder-image-free-hd-png-download.png",
       created_at: currentDateTime,
-      updated_at: currentDateTime
+      updated_at: currentDateTime,
     };
-
-    
   };
 
   return (
     <View style={styles.container}>
-      <Stack.Screen options={{ headerShown: false }} /> 
+      <Stack.Screen options={{ headerShown: false }} />
       <Image
         source={require("../../assets/images/nsbm_logo.png")}
         style={styles.logo}
@@ -49,14 +47,14 @@ const SignInScreen = () => {
       <CustomText style={styles.title}>Sign Up</CustomText>
 
       <View style={styles.form}>
-      <CustomText style={styles.label}>Full Name: </CustomText>
+        <CustomText style={styles.label}>Full Name: </CustomText>
         <TextInput
           style={styles.input}
           placeholder="Enter Name Here"
           value={name}
           onChangeText={setName}
         />
-        
+
         <CustomText style={styles.label}>NSBM Email</CustomText>
         <TextInput
           style={styles.input}
@@ -82,18 +80,28 @@ const SignInScreen = () => {
           onChangeText={setPhoneNo}
         />
 
-        <CustomText style={styles.label}>Are you a Student or a Lecturer?</CustomText>
+        <CustomText style={styles.label}>
+          Are you a Student or a Lecturer?
+        </CustomText>
         <View style={styles.pickerContainer}>
           <Picker
             selectedValue={signType}
             onValueChange={(itemValue) => setSignType(itemValue)}
             style={styles.picker}
           >
-            <Picker.Item style={styles.pickerItem} label="Student" value="Student" />
-            <Picker.Item style={styles.pickerItem} label="Lecturer" value="Lecturer" />
+            <Picker.Item
+              style={styles.pickerItem}
+              label="Student"
+              value="Student"
+            />
+            <Picker.Item
+              style={styles.pickerItem}
+              label="Lecturer"
+              value="Lecturer"
+            />
           </Picker>
         </View>
-      
+
         <View style={styles.buttonContainer}>
           <TouchableOpacity
             style={[styles.button, styles.signInButton]}
@@ -123,8 +131,8 @@ const styles = StyleSheet.create({
     resizeMode: "contain",
   },
   title: {
-    marginTop: 100,
-    marginBottom: 50,
+    marginTop: "5%",
+    marginBottom: "5%",
     fontSize: 44,
     fontWeight: "200",
     color: "#ffffff",
@@ -192,16 +200,16 @@ const styles = StyleSheet.create({
   },
   pickerContainer: {
     borderWidth: 1,
-    borderColor: '#ccc',
-    backgroundColor: '#AFD9AF',
+    borderColor: "#ccc",
+    backgroundColor: "#AFD9AF",
     borderRadius: 10,
   },
   picker: {
     height: 50,
-    width: '100%',
+    width: "100%",
   },
   pickerItem: {
-    fontWeight: '200'
+    fontWeight: "200",
   },
 });
 
