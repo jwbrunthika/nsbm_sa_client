@@ -47,13 +47,13 @@ const SignInScreen = () => {
       });
       // console.error(apiKey);
 
-      // router.push("/"); // Navigate to the next screen after successful login
+      router.push("/"); // Navigate to the next screen after successful login
     } catch (error) {
       console.error("Login error:", error);
       Toast.show({
         type: "error",
         position: "top",
-        text1: "Login Failed"
+        text1: "Login Failed",
       });
     }
   };
@@ -96,12 +96,16 @@ const SignInScreen = () => {
             style={[styles.button, styles.googleButton]}
             onPress={() => router.push("/")}
           >
-            <CustomText style={styles.googlebuttonText}>Microsoft Login</CustomText>
+            <CustomText style={styles.googlebuttonText}>
+              Microsoft Login
+            </CustomText>
           </TouchableOpacity>
         </View>
 
         <TouchableOpacity>
-          <CustomText style={styles.forgotPassword}>Forgot Password?</CustomText>
+          <CustomText style={styles.forgotPassword}>
+            Forgot Password?
+          </CustomText>
         </TouchableOpacity>
       </View>
 

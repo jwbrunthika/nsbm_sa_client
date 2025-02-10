@@ -19,8 +19,17 @@ const SignInScreen = () => {
   const [mail, setMail] = useState("");
   const [name, setName] = useState("");
   const [password, setPassword] = useState("");
-  const [signType, setSignType] = useState("");
+  const [signType, setSignType] = useState("Student");
   const [phone, setPhoneNo] = useState("");
+
+  const storeData = async (key, value) => {
+    try {
+      await AsyncStorage.setItem(key, value);
+      console.log("Data stored successfully");
+    } catch (error) {
+      console.error("Error storing data", error);
+    }
+  };
 
   const handleSignIn = async () => {
     const currentDateTime = new Date().toISOString();
@@ -36,13 +45,17 @@ const SignInScreen = () => {
       updated_at: currentDateTime,
     };
     try {
-      const response = await fetch(`${SERVER_ADDRESS}/auth/login`, {
+      const response = await fetch(`${SERVER_ADDRESS}/auth/register`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify(credentials),
       });
+
+      if (response.status === 409) {
+        throw new Error("User Already Exists");
+      }
 
       if (!response.ok) {
         throw new Error("Registration Failed");
@@ -52,18 +65,19 @@ const SignInScreen = () => {
       Toast.show({
         type: "success",
         position: "top",
-        text1: data.message,
+        text1: "Registration Successful !",
       });
+      storeData("apiKey", data.access_token);
       // console.error(apiKey);
 
-      // router.push("/"); // Navigate to the next screen after successful login
+      router.push("/"); // Navigate to the next screen after successful login
     } catch (error) {
-      console.error("Login error:", error);
+      // console.error("Login error:", error);
       Toast.show({
         type: "error",
         position: "top",
         text1: "Sign Up Failed",
-        text2: "Server Error Occured !"
+        text2: error,
       });
     }
   };
