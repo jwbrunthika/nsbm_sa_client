@@ -1,34 +1,55 @@
 import React, { useEffect, useState } from "react";
-import { StyleSheet, Text, View, ScrollView, Dimensions } from "react-native";
-import { useNavigation } from "@react-navigation/native";
-import { Stack } from "expo-router";
+import { StyleSheet, Text, View, ScrollView, Dimensions, Image } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Carousel, { Pagination } from "react-native-reanimated-carousel";
 import { useSharedValue } from "react-native-reanimated";
-import { Image } from "react-native";
+import SERVER_ADDRESS from "@/config";
+import checkApiValid from "../services/checkAuth";
+import { Stack } from "expo-router";
 
 const width = Dimensions.get("window").width;
 
 export default function HomeScreen() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const navigation = useNavigation();
+  const [newsData, setNewsData] = useState([]);
   const progress = useSharedValue(0);
 
+  const fetchNews = async (key) => {
+    try {
+      const response = await fetch(`${SERVER_ADDRESS}/data/news/fetch`, {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${key}`,
+        },
+      });
+      const result = await response.json();
+      setNewsData(result); // Assuming the API returns an array of news
+    } catch (error) {
+      console.log("Error fetching news:", error);
+    }
+  };
+
   useEffect(() => {
-    const checkLoginStatus = async () => {
+    const validateLogin = async () => {
       try {
-        const key = await AsyncStorage.getItem("apiKey");
+        const key = await AsyncStorage.getItem('apiKey');
         if (key) {
+          const isApiValid = await checkApiValid(key);
           setIsLoggedIn(true);
+          if (isApiValid) {
+            fetchNews(key); // Fetch data if API is valid
+          } else {
+            console.log('Invalid API key');
+          }
         } else {
-          navigation.replace("auth/sign-in");
+          console.log("Error");
         }
       } catch (error) {
-        console.log("Error checking login status:", error);
+        console.log('Error checking login status:', error);
       }
     };
 
-    checkLoginStatus();
+    validateLogin();
   }, []);
 
   if (!isLoggedIn) {
@@ -83,12 +104,12 @@ export default function HomeScreen() {
 
         <Text style={styles.sectionTitle}>Latest News</Text>
         <View style={styles.newsContainer}>
-          <View style={styles.newsCard}>
-            <Text style={styles.newsDate}>Pull News from DB</Text>
-          </View>
-          <View style={styles.newsCard}>
-            <Text style={styles.newsDate}>02 March 2020</Text>
-          </View>
+          {(newsData || []).map((news, index) => (
+            <View key={index} style={styles.newsCard}>
+              <Text style={styles.newsTitle}>{news.news_title}</Text>
+              {news.image && <Image source={{ uri: news.image }} style={styles.newsImage} />}
+            </View>
+          ))}
         </View>
       </ScrollView>
     </>
@@ -176,6 +197,11 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     justifyContent: "center",
     alignItems: "center",
+  },
+  newsTitle: {
+    fontSize: 16,
+    fontWeight: "300",
+    color: "#1B5E20",
   },
   newsDate: {
     fontSize: 14,

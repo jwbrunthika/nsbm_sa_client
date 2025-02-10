@@ -8,12 +8,14 @@ import {
   Image,
 } from "react-native";
 import CustomText from "@/components/CustomText";
-import { useRouter } from "expo-router";
+// import { useRouter } from "expo-router";
 import Toast from "react-native-toast-message"; // Add Toast library
 import SERVER_ADDRESS from "@/config";
+import { Stack } from "expo-router";
+
 
 const SignInScreen = () => {
-  const router = useRouter();
+  // const router = useRouter();
   const [mail, setMail] = useState("");
   const [password, setPassword] = useState("");
 
@@ -22,7 +24,7 @@ const SignInScreen = () => {
       email: mail,
       password: password,
     };
-
+  
     try {
       const response = await fetch(`${SERVER_ADDRESS}/auth/login`, {
         method: "POST",
@@ -31,14 +33,20 @@ const SignInScreen = () => {
         },
         body: JSON.stringify(credentials),
       });
-
+  
       if (!response.ok) {
         throw new Error("Login failed");
       }
-
+  
       const data = await response.json();
       const apiKey = data.access_token;
+  
+      // Delete existing API key before setting the new one
+      await AsyncStorage.removeItem("apiKey");
+  
+      // Store the new API key
       await AsyncStorage.setItem("apiKey", apiKey);
+  
       Toast.show({
         type: "success",
         position: "top",
@@ -46,8 +54,8 @@ const SignInScreen = () => {
         text2: apiKey,
       });
       // console.error(apiKey);
-
-      router.push("/"); // Navigate to the next screen after successful login
+  
+      // router.push("/"); // Navigate to the next screen after successful login
     } catch (error) {
       console.error("Login error:", error);
       Toast.show({
@@ -57,15 +65,17 @@ const SignInScreen = () => {
       });
     }
   };
+  
 
   return (
+    
     <View style={styles.container}>
       <Image
         source={require("../../assets/images/nsbm_logo.png")}
         style={styles.logo}
       />
       <CustomText style={styles.title}>Sign In</CustomText>
-
+      <Stack.Screen options={{ headerShown: false }} />
       <View style={styles.form}>
         <CustomText style={styles.label}>NSBM Email</CustomText>
         <TextInput
@@ -94,18 +104,14 @@ const SignInScreen = () => {
 
           <TouchableOpacity
             style={[styles.button, styles.googleButton]}
-            onPress={() => router.push("/")}
+            // onPress={() => router.push("/")}
           >
-            <CustomText style={styles.googlebuttonText}>
-              Microsoft Login
-            </CustomText>
+            <CustomText style={styles.googlebuttonText}>Microsoft Login</CustomText>
           </TouchableOpacity>
         </View>
 
         <TouchableOpacity>
-          <CustomText style={styles.forgotPassword}>
-            Forgot Password?
-          </CustomText>
+          <CustomText style={styles.forgotPassword}>Forgot Password?</CustomText>
         </TouchableOpacity>
       </View>
 

@@ -11,11 +11,13 @@ import {
 import CustomText from "@/components/CustomText";
 import { Picker } from "@react-native-picker/picker";
 import SERVER_ADDRESS from "@/config";
-import { useRouter, Stack } from "expo-router";
+// import { useRouter, Stack } from "expo-router";
 import Toast from "react-native-toast-message"; // Add Toast library
+import { Stack } from "expo-router";
 
-const SignInScreen = () => {
-  const router = useRouter();
+
+const SignUpScreen = () => {
+  // const router = useRouter();
   const [mail, setMail] = useState("");
   const [name, setName] = useState("");
   const [password, setPassword] = useState("");
@@ -70,7 +72,7 @@ const SignInScreen = () => {
       storeData("apiKey", data.access_token);
       // console.error(apiKey);
 
-      router.push("/"); // Navigate to the next screen after successful login
+      // router.push("/"); // Navigate to the next screen after successful login
     } catch (error) {
       // console.error("Login error:", error);
       Toast.show({
@@ -84,7 +86,7 @@ const SignInScreen = () => {
 
   return (
     <View style={styles.container}>
-      <Stack.Screen options={{ headerShown: false }} />
+      {/* <Stack.Screen options={{ headerShown: false }} /> */}
       <Image
         source={require("../../assets/images/nsbm_logo.png")}
         style={styles.logo}
@@ -258,4 +260,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default SignInScreen;
+export default SignUpScreen;

@@ -1,26 +1,30 @@
-export async function checkAuthWithServer() {
-  const serverUrl = "http://192.168.134.231:5000/auth"; // Replace with the actual endpoint
+import SERVER_ADDRESS from "@/config";
+import {Link, router} from 'expo-router';
 
+export default async function checkApiValid(apiKey) {
   try {
-    const response = await fetch(serverUrl, {
-      method: "GET", // or 'POST' depending on your server's requirements
+    const response = await fetch(`${SERVER_ADDRESS}/data/users/fetch`, {
+      method: "GET",
       headers: {
-        "Content-Type": "application/json",
-        // Add any other headers if needed, such as authentication tokens
+        Authorization: `Bearer ${apiKey}`,
       },
-      // If you need to send a body, uncomment the following line:
-      // body: JSON.stringify({ key: 'value' })
     });
 
     if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
+      console.log("API Error:", response.statusText);
+      router.replace('/(auth)/sign-in')
+      return false;
     }
 
-    const data = await response.json();
-    console.log("Server response:", data);
-    return data; // Return the response data if needed
+    const result = await response.json();
+    if (result && Array.isArray(result)) {
+      return true; // API is valid and returned expected data as an array
+    } else {
+      console.log("Invalid data format:", result);
+      return false;
+    }
   } catch (error) {
-    console.error("Error connecting to the server:", error);
-    throw error; // Re-throw the error if you want to handle it elsewhere
+    console.log("Error checking API validity:", error);
+    return false; // Return false if there's any error
   }
-}
+};
