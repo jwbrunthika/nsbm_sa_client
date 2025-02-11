@@ -104,7 +104,7 @@ const SignInScreen = () => {
 
           <TouchableOpacity
             style={[styles.button, styles.googleButton]}
-            // onPress={() => router.push("/")}
+            onPress={() => router.replace('/(main_screen)/index')}
           >
             <CustomText style={styles.googlebuttonText}>Microsoft Login</CustomText>
           </TouchableOpacity>

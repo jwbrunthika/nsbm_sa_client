@@ -3,31 +3,42 @@ import { StyleSheet, Text, View, ScrollView, Dimensions, Image } from "react-nat
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Carousel, { Pagination } from "react-native-reanimated-carousel";
 import { useSharedValue } from "react-native-reanimated";
-import SERVER_ADDRESS from "@/config";
 import checkApiValid from "../services/checkAuth";
 import { Stack } from "expo-router";
+import fetchData from "../services/fetcher";
+import Toast from "react-native-toast-message";
+import caraouselComponent from "@/components/textnimageCaraousel";
 
 const width = Dimensions.get("window").width;
+const defaultDataWith6Colors = [
+	"#B0604D",
+	"#899F9C",
+	"#B3C680",
+	"#5C6265",
+	"#F5D399",
+	"#F1F1F1",
+];
 
 export default function HomeScreen() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [newsData, setNewsData] = useState([]);
   const progress = useSharedValue(0);
 
-  const fetchNews = async (key) => {
-    try {
-      const response = await fetch(`${SERVER_ADDRESS}/data/news/fetch`, {
-        method: "GET",
-        headers: {
-          Authorization: `Bearer ${key}`,
-        },
-      });
-      const result = await response.json();
-      setNewsData(result); // Assuming the API returns an array of news
-    } catch (error) {
-      console.log("Error fetching news:", error);
-    }
-  };
+
+  // const fetchNews = async (key) => {
+  //   try {
+  //     const response = await fetch(`${SERVER_ADDRESS}/data/news/fetch`, {
+  //       method: "GET",
+  //       headers: {
+  //         Authorization: `Bearer ${key}`,
+  //       },
+  //     });
+  //     const result = await response.json();
+  //     setNewsData(result); // Assuming the API returns an array of news
+  //   } catch (error) {
+  //     console.log("Error fetching news:", error);
+  //   }
+  // };
 
   useEffect(() => {
     const validateLogin = async () => {
@@ -37,15 +48,27 @@ export default function HomeScreen() {
           const isApiValid = await checkApiValid(key);
           setIsLoggedIn(true);
           if (isApiValid) {
-            fetchNews(key); // Fetch data if API is valid
+            const result = await fetchData("news", key); // Fetch data if API is valid
+            setNewsData(result);
+            
           } else {
             console.log('Invalid API key');
+            Toast.show({
+              type: "error",
+              position:"bottom",
+              text1:"Session Expired !"
+            });
           }
         } else {
           console.log("Error");
         }
       } catch (error) {
         console.log('Error checking login status:', error);
+        Toast.show({
+          type: "error",
+          position:"bottom",
+          text1:"System Experienced an Error !"
+        });
       }
     };
 
@@ -61,7 +84,6 @@ export default function HomeScreen() {
     "https://d3c539pel8wzjz.cloudfront.net/wp-content/uploads/2021/08/r1-1.jpg",
     "https://idonura.wordpress.com/wp-content/uploads/2017/09/img_5287.jpg?w=1200&h=899",
     "https://media.licdn.com/dms/image/v2/C561BAQHiubTkMPrifw/company-background_10000/company-background_10000/0/1638507962416/nsbmgreenuniversity_cover?e=2147483647&v=beta&t=FD8-SbAHk-24clJVlVICcshOxvqYi2QPS5r4w7Fgpzo",
-    "https://is1-ssl.mzstatic.com/image/thumb/Purple211/v4/bc/7a/62/bc7a621f-e816-3fde-cdea-28f1b05176e3/AppIcon-0-0-1x_U007emarketing-0-7-0-0-85-220.png/1200x630wa.png",
   ];
 
   return (
@@ -75,22 +97,29 @@ export default function HomeScreen() {
         </View>
 
         <Carousel
+          mode = "parallax"
           width={width * 1}
           height={width / 1.5}
           data={images}
+          loop={true}
+          modeConfig={{
+            parallaxScrollingScale: 0.9,
+            parallaxScrollingOffset: 90,
+          }}
           onProgressChange={(_, absoluteProgress) =>
             (progress.value = absoluteProgress)
           }
           renderItem={({ item }) => (
             <View style={styles.carouselItem}>
               <Image source={{ uri: item }} style={styles.carouselImage} />
+              <Text style={styles.Headings}>Clicks by Community</Text>   
             </View>
           )}
         />
         <Pagination.Basic
           progress={progress}
           data={images}
-          dotStyle={{ backgroundColor: "rgba(0,0,0,0.2)", borderRadius: 50 }}
+          dotStyle={{ backgroundColor: "#AFD9AF", borderRadius: 100 }}
           containerStyle={{ gap: 5, marginTop: 10 }}
         />
 
@@ -103,14 +132,33 @@ export default function HomeScreen() {
         </View>
 
         <Text style={styles.sectionTitle}>Latest News</Text>
-        <View style={styles.newsContainer}>
-          {(newsData || []).map((news, index) => (
-            <View key={index} style={styles.newsCard}>
-              <Text style={styles.newsTitle}>{news.news_title}</Text>
-              {news.image && <Image source={{ uri: news.image }} style={styles.newsImage} />}
-            </View>
-          ))}
-        </View>
+          <View>
+            {Array.isArray(newsData) && newsData.length > 0 ? (
+              <Carousel
+                mode="normal"
+                width={width * 1}
+                height={width / 2}
+                data={newsData}
+                loop={true}
+                modeConfig={{
+                  parallaxScrollingScale: 0.9,
+                  parallaxScrollingOffset: 90,
+                }}
+                renderItem={({ item }) => {
+                  const base64Image = 'data:image/jpeg;base64,' + item.image;
+                  return (
+                    <View style={styles.carouselItem}>
+                      <Text style={styles.Headings}>{item.news_title}</Text>
+                      <Image source={{ uri: base64Image }} style={styles.carouselImage} />
+                    </View>
+                  );
+                }}
+              />
+            ) : (
+              <Text>No news available</Text>
+            )}
+          </View>
+
       </ScrollView>
     </>
   );
@@ -129,6 +177,13 @@ const styles = StyleSheet.create({
     borderBottomRightRadius: 10,
     padding: 16,
     backgroundColor: "#AFD9AF",
+  },
+  Headings: {
+    paddingTop: "2%",
+    fontSize: 15,
+    fontWeight: "300",
+    color: "#1B5E20",
+    alignSelf: "center"
   },
   greeting: {
     fontSize: 18,
@@ -158,6 +213,7 @@ const styles = StyleSheet.create({
     borderRadius: 12,
   },
   subtitle: {
+    paddingTop: "2%",
     textAlign: "center",
     fontSize: 16,
     fontStyle: "italic",
@@ -167,7 +223,10 @@ const styles = StyleSheet.create({
   },
   card: {
     backgroundColor: "#d6e1ed",
-    padding: 100,
+    height: "10%",
+    alignSelf: "center",
+    alignItems: "center",
+    width: "50%",
     borderRadius: 8,
     marginHorizontal: 16,
     marginBottom: 16,
@@ -175,6 +234,7 @@ const styles = StyleSheet.create({
   cardText: {
     fontSize: 16,
     alignSelf: "center",
+
     fontWeight: "200",
     color: "#0D47A1",
   },
@@ -186,12 +246,12 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   newsContainer: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    paddingHorizontal: 16,
+    borderRadius: "5%",
+    borderColor: "#DCEDC8",
+    alignItems: "center",
   },
   newsCard: {
-    backgroundColor: "#DCEDC8",
+    backgroundColor: "#DCEDC8" ,
     width: "48%",
     height: 100,
     borderRadius: 8,
