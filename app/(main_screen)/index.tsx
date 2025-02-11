@@ -1,5 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { StyleSheet, Text, View, ScrollView, Dimensions, Image } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  View,
+  ScrollView,
+  Dimensions,
+  Image,
+} from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Carousel, { Pagination } from "react-native-reanimated-carousel";
 import { useSharedValue } from "react-native-reanimated";
@@ -11,19 +18,18 @@ import caraouselComponent from "@/components/textnimageCaraousel";
 
 const width = Dimensions.get("window").width;
 const defaultDataWith6Colors = [
-	"#B0604D",
-	"#899F9C",
-	"#B3C680",
-	"#5C6265",
-	"#F5D399",
-	"#F1F1F1",
+  "#B0604D",
+  "#899F9C",
+  "#B3C680",
+  "#5C6265",
+  "#F5D399",
+  "#F1F1F1",
 ];
 
 export default function HomeScreen() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [newsData, setNewsData] = useState([]);
   const progress = useSharedValue(0);
-
 
   // const fetchNews = async (key) => {
   //   try {
@@ -43,31 +49,30 @@ export default function HomeScreen() {
   useEffect(() => {
     const validateLogin = async () => {
       try {
-        const key = await AsyncStorage.getItem('apiKey');
+        const key = await AsyncStorage.getItem("apiKey");
         if (key) {
           const isApiValid = await checkApiValid(key);
           setIsLoggedIn(true);
           if (isApiValid) {
             const result = await fetchData("news", key); // Fetch data if API is valid
             setNewsData(result);
-            
           } else {
-            console.log('Invalid API key');
+            console.log("Invalid API key");
             Toast.show({
               type: "error",
-              position:"bottom",
-              text1:"Session Expired !"
+              position: "bottom",
+              text1: "Session Expired !",
             });
           }
         } else {
           console.log("Error");
         }
       } catch (error) {
-        console.log('Error checking login status:', error);
+        console.log("Error checking login status:", error);
         Toast.show({
           type: "error",
-          position:"bottom",
-          text1:"System Experienced an Error !"
+          position: "bottom",
+          text1: "System Experienced an Error !",
         });
       }
     };
@@ -97,7 +102,7 @@ export default function HomeScreen() {
         </View>
 
         <Carousel
-          mode = "parallax"
+          mode="parallax"
           width={width * 1}
           height={width / 1.5}
           data={images}
@@ -112,7 +117,7 @@ export default function HomeScreen() {
           renderItem={({ item }) => (
             <View style={styles.carouselItem}>
               <Image source={{ uri: item }} style={styles.carouselImage} />
-              <Text style={styles.Headings}>Clicks by Community</Text>   
+              <Text style={styles.Headings}>Clicks by Community</Text>
             </View>
           )}
         />
@@ -127,38 +132,40 @@ export default function HomeScreen() {
           "Connecting Campus Life, One App at a Time."
         </Text>
 
-        <View style={styles.card}>
+        {/* <View style={styles.card}>
           <Text style={styles.cardText}>[RetrieveEventsFromDB]</Text>
-        </View>
-
+        </View> */}
         <Text style={styles.sectionTitle}>Latest News</Text>
-          <View>
-            {Array.isArray(newsData) && newsData.length > 0 ? (
-              <Carousel
-                mode="normal"
-                width={width * 1}
-                height={width / 2}
-                data={newsData}
-                loop={true}
-                modeConfig={{
-                  parallaxScrollingScale: 0.9,
-                  parallaxScrollingOffset: 90,
-                }}
-                renderItem={({ item }) => {
-                  const base64Image = 'data:image/jpeg;base64,' + item.image;
-                  return (
-                    <View style={styles.carouselItem}>
-                      <Text style={styles.Headings}>{item.news_title}</Text>
-                      <Image source={{ uri: base64Image }} style={styles.carouselImage} />
-                    </View>
-                  );
-                }}
-              />
-            ) : (
-              <Text>No news available</Text>
-            )}
-          </View>
-
+        <View>
+          {Array.isArray(newsData) && newsData.length > 0 ? (
+            <Carousel
+              mode="normal"
+              width={width * 1}
+              height={width / 1.2}
+              data={newsData}
+              loop={true}
+              modeConfig={{
+                parallaxScrollingScale: 1,
+                parallaxScrollingOffset: 100,
+              }}
+              renderItem={({ item }) => {
+                const base64Image = "data:image/jpeg;base64," + item.image;
+                return (
+                  <View style={styles.newsContainer}>
+                    <View style={styles.tintOverlay} />
+                    <Text style={styles.Headings}>{item.news_title}</Text>
+                    <Image
+                      source={{ uri: base64Image }}
+                      style={styles.newsCarouselImage}
+                    />
+                  </View>
+                );
+              }}
+            />
+          ) : (
+            <Text>No news available</Text>
+          )}
+        </View>
       </ScrollView>
     </>
   );
@@ -183,7 +190,7 @@ const styles = StyleSheet.create({
     fontSize: 15,
     fontWeight: "300",
     color: "#1B5E20",
-    alignSelf: "center"
+    alignSelf: "center",
   },
   greeting: {
     fontSize: 18,
@@ -202,15 +209,41 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     backgroundColor: "#C8E6C9",
   },
+  imageWrapper: {
+    position: "relative",
+  },
+  tintOverlay: {
+    ...StyleSheet.absoluteFillObject, // fills the image's dimensions
+    backgroundColor: "rgba(144, 238, 144, 0.3)", // light green with 30% opacity
+    borderRadius: 10,
+  },
+
   carouselItem: {
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
   },
   carouselImage: {
-    width: "95%",
+    width: "90%",
     height: "95%",
     borderRadius: 12,
+  },
+  newsCarouselImage: {
+    width: "90%",
+    height: "95%",
+    borderRadius: 12,
+  },
+  imageWrapper: {
+    position: "relative",
+    width: "90%",
+    height: "95%",
+    borderRadius: 12,
+    overflow: "hidden", // ensures the tint respects the border radius
+  },
+  tintOverlay: {
+    padding: 16,
+    ...StyleSheet.absoluteFillObject, // covers the entire image
+    backgroundColor: "rgba(144, 238, 144, 0.3)", // light green with 30% opacity
   },
   subtitle: {
     paddingTop: "2%",
@@ -246,21 +279,21 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   newsContainer: {
-    borderRadius: "5%",
+    width: "100%",
     borderColor: "#DCEDC8",
     alignItems: "center",
   },
   newsCard: {
-    backgroundColor: "#DCEDC8" ,
+    backgroundColor: "#DCEDC8",
     width: "48%",
-    height: 100,
+    height: "100%",
     borderRadius: 8,
     justifyContent: "center",
     alignItems: "center",
   },
   newsTitle: {
-    fontSize: 16,
-    fontWeight: "300",
+    fontSize: 8,
+    fontWeight: "200",
     color: "#1B5E20",
   },
   newsDate: {
