@@ -133,9 +133,11 @@ export default function HomeScreen() {
           containerStyle={{ gap: 5, marginTop: 10 }}
         />
 
-        {/* <View style={styles.card}>
-          <Text style={styles.cardText}>[RetrieveEventsFromDB]</Text>
-        </View> */}
+        <Text style={styles.sectionTitle}>Events & Stalls</Text>
+        <View style={styles.card}>
+          <Text style={styles.cardText}>Oops... !, you caught us working on this</Text>
+        </View>
+
         <Text style={styles.sectionTitle}>Latest News</Text>
         <View>
           {Array.isArray(newsData) && newsData.length > 0 ? (
@@ -214,9 +216,6 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     backgroundColor: "#C8E6C9",
   },  
-  imageWrapper: {
-    position: "relative",
-  },
   tintOverlay: {
     ...StyleSheet.absoluteFillObject, // fills the image's dimensions
     backgroundColor: "rgba(144, 238, 144, 0.3)", // light green with 30% opacity
@@ -262,17 +261,18 @@ const styles = StyleSheet.create({
   card: {
     backgroundColor: "#d6e1ed",
     height: "10%",
+    width: "90%",
     alignSelf: "center",
     alignItems: "center",
-    width: "50%",
+    justifyContent: "center",
     borderRadius: 8,
     marginHorizontal: 16,
     marginBottom: 16,
   },
   cardText: {
     fontSize: 16,
-    alignSelf: "center",
-
+    alignItems: "center",
+    justifyContent: "center",
     fontWeight: "200",
     color: "#0D47A1",
   },
@@ -300,7 +300,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
     padding: "5%",
     alignSelf: "center",
-    // justifyContent: "center",
+    justifyContent: "felx-end",
     fontWeight: "200",
     color: "#1B5E20",
   },
