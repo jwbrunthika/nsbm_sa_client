@@ -287,7 +287,6 @@ const styles = StyleSheet.create({
     width: "100%",
     borderColor: "#DCEDC8",
     alignItems: "center",
-    justifyContent: "flex-end"
   },
   newsCard: {
     backgroundColor: "#DCEDC8",
@@ -296,10 +295,10 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     justifyContent: "center",
     alignItems: "center",
-
   },
   newsTitle: {
     fontSize: 14,
+    padding: "5%",
     alignSelf: "center",
     // justifyContent: "center",
     fontWeight: "200",
