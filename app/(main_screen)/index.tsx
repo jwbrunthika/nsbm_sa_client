@@ -298,9 +298,8 @@ const styles = StyleSheet.create({
   },
   newsTitle: {
     fontSize: 14,
-    padding: "5%",
+    padding: "2%",
     alignSelf: "center",
-    justifyContent: "felx-end",
     fontWeight: "200",
     color: "#1B5E20",
   },
