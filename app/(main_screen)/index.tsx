@@ -17,6 +17,7 @@ import { Stack } from "expo-router";
 import fetchData from "../services/fetcher";
 import Toast from "react-native-toast-message";
 import caraouselComponent from "@/components/textnimageCaraousel";
+import { Ionicons } from "@expo/vector-icons";
 
 const width = Dimensions.get("window").width;
 const defaultDataWith6Colors = [
@@ -34,21 +35,6 @@ export default function HomeScreen() {
   const [userData, setUserData] = useState([]);
   const progress = useSharedValue(0);
 
-  // const fetchNews = async (key) => {
-  //   try {
-  //     const response = await fetch(`${SERVER_ADDRESS}/data/news/fetch`, {
-  //       method: "GET",
-  //       headers: {
-  //         Authorization: `Bearer ${key}`,
-  //       },
-  //     });
-  //     const result = await response.json();
-  //     setNewsData(result); // Assuming the API returns an array of news
-  //   } catch (error) {
-  //     console.log("Error fetching news:", error);
-  //   }
-  // };
-
   useEffect(() => {
     const validateLogin = async () => {
       try {
@@ -63,7 +49,8 @@ export default function HomeScreen() {
             if (Array.isArray(dataResult) && dataResult.length > 0) {
               setUserData(dataResult[0]); // Use the first user object
             }
-  
+            console.log(dataResult)
+            
             setNewsData(result);
           } else {
             Toast.show({
@@ -94,6 +81,7 @@ export default function HomeScreen() {
   }
 
   const images = [
+    "https://cssl.nsbm.ac.lk/wp-content/uploads/2023/07/NSBM-LOGO.png",
     "https://www.eduwire.lk/wp-content/uploads/2025/01/1000-human_resource_circle_of_nsbm_green_university_cover.jpg",
     "https://d3c539pel8wzjz.cloudfront.net/wp-content/uploads/2021/08/r1-1.jpg",
     "https://idonura.wordpress.com/wp-content/uploads/2017/09/img_5287.jpg?w=1200&h=899",
@@ -105,11 +93,15 @@ export default function HomeScreen() {
       <Stack.Screen options={{ headerShown: false }} />
       <ScrollView style={styles.container}>
         <View style={styles.header}>
-          <View style={styles.ServicesMenu}></View>
+        <View style={styles.ServicesMenu}>
+          <Ionicons name="grid" size={24} color="#1B5E20" onPress={() => router.push('/service-menu')} />
+        </View>
           <Text style={styles.greeting}>
             Welcome back, {userData?.full_name || "User"} !
           </Text>
-          <View style={styles.profileIcon}></View>
+          <View style={styles.profileIcon}>
+          <Ionicons name="person" size={24} color="#1B5E20" onPress={() => router.push('/service-menu')} />
+          </View>
         </View>
 
         <Carousel
@@ -125,10 +117,12 @@ export default function HomeScreen() {
           onProgressChange={(_, absoluteProgress) =>
             (progress.value = absoluteProgress)
           }
-          renderItem={({ item }) => (
+          renderItem={({ item, index }) => (
             <View style={styles.carouselItem}>
               <Image source={{ uri: item }} style={styles.carouselImage} />
-              <Text style={styles.Headings}>Clicks by Community</Text>
+              <Text style={[styles.Headings, index === 0 && { fontStyle: 'italic' , fontWeight: 'bold'}]}>
+                {index === 0 ? '"Connecting Campus Life, One App at a Time."' : 'Clicks by Community'}
+              </Text>
             </View>
           )}
         />
@@ -138,10 +132,6 @@ export default function HomeScreen() {
           dotStyle={{ backgroundColor: "#AFD9AF", borderRadius: 100 }}
           containerStyle={{ gap: 5, marginTop: 10 }}
         />
-
-        <Text style={styles.subtitle}>
-          "Connecting Campus Life, One App at a Time."
-        </Text>
 
         {/* <View style={styles.card}>
           <Text style={styles.cardText}>[RetrieveEventsFromDB]</Text>
@@ -209,17 +199,21 @@ const styles = StyleSheet.create({
     color: "#1B5E20",
   },
   profileIcon: {
+    alignItems: "center",
+    justifyContent: "center",
     width: 40,
     height: 40,
     borderRadius: 20,
     backgroundColor: "#C8E6C9",
   },
   ServicesMenu: {
+    alignItems: "center",
+    justifyContent: "center", // This will vertically center the content
     width: 40,
     height: 40,
     borderRadius: 5,
     backgroundColor: "#C8E6C9",
-  },
+  },  
   imageWrapper: {
     position: "relative",
   },

@@ -11,7 +11,9 @@ import CustomText from "@/components/CustomText";
 // import { useRouter } from "expo-router";
 import Toast from "react-native-toast-message"; // Add Toast library
 import SERVER_ADDRESS from "@/config";
+import {Link, router} from 'expo-router';
 import { Stack } from "expo-router";
+
 
 
 const SignInScreen = () => {
@@ -53,6 +55,7 @@ const SignInScreen = () => {
         text1: "API Key",
         text2: apiKey,
       });
+      router.replace('/')
       // console.error(apiKey);
   
       // router.push("/"); // Navigate to the next screen after successful login
@@ -104,7 +107,7 @@ const SignInScreen = () => {
 
           <TouchableOpacity
             style={[styles.button, styles.googleButton]}
-            onPress={() => router.replace('/(main_screen)/index')}
+            onPress={() => router.replace('/')}
           >
             <CustomText style={styles.googlebuttonText}>Microsoft Login</CustomText>
           </TouchableOpacity>
