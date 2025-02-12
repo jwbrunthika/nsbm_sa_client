@@ -1,4 +1,6 @@
 import React, { useEffect, useState } from "react";
+import {Link, router} from 'expo-router';
+
 import {
   StyleSheet,
   Text,
@@ -29,6 +31,7 @@ const defaultDataWith6Colors = [
 export default function HomeScreen() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [newsData, setNewsData] = useState([]);
+  const [userData, setUserData] = useState([]);
   const progress = useSharedValue(0);
 
   // const fetchNews = async (key) => {
@@ -54,10 +57,15 @@ export default function HomeScreen() {
           const isApiValid = await checkApiValid(key);
           setIsLoggedIn(true);
           if (isApiValid) {
-            const result = await fetchData("news", key); // Fetch data if API is valid
+            const result = await fetchData("news", key);
+            const dataResult = await fetchData("users", key);
+            
+            if (Array.isArray(dataResult) && dataResult.length > 0) {
+              setUserData(dataResult[0]); // Use the first user object
+            }
+  
             setNewsData(result);
           } else {
-            console.log("Invalid API key");
             Toast.show({
               type: "error",
               position: "bottom",
@@ -65,7 +73,7 @@ export default function HomeScreen() {
             });
           }
         } else {
-          console.log("Error");
+          router.replace('/(auth)/sign-in');
         }
       } catch (error) {
         console.log("Error checking login status:", error);
@@ -76,9 +84,10 @@ export default function HomeScreen() {
         });
       }
     };
-
+  
     validateLogin();
   }, []);
+  
 
   if (!isLoggedIn) {
     return null; // Avoid rendering anything if not logged in
@@ -97,7 +106,9 @@ export default function HomeScreen() {
       <ScrollView style={styles.container}>
         <View style={styles.header}>
           <View style={styles.ServicesMenu}></View>
-          <Text style={styles.greeting}>Welcome back [Name]!</Text>
+          <Text style={styles.greeting}>
+            Welcome back, {userData?.full_name || "User"} !
+          </Text>
           <View style={styles.profileIcon}></View>
         </View>
 
