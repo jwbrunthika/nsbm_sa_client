@@ -295,6 +295,8 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     justifyContent: "center",
     alignItems: "center",
+    justifyContent: "flex-end"
+
   },
   newsTitle: {
     fontSize: 14,
