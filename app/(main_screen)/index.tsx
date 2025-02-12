@@ -154,7 +154,7 @@ export default function HomeScreen() {
                 return (
                   <View style={styles.newsContainer}>
                     <View style={styles.tintOverlay} />
-                    <Text style={styles.Headings}>{item.news_title}</Text>
+                    <Text style={styles.newsTitle}>{item.news_title}</Text>
                     <Image
                       source={{ uri: base64Image }}
                       style={styles.newsCarouselImage}
@@ -234,7 +234,7 @@ const styles = StyleSheet.create({
     borderRadius: 12,
   },
   newsCarouselImage: {
-    width: "90%",
+    width: "95%",
     height: "95%",
     borderRadius: 12,
   },
@@ -297,7 +297,10 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   newsTitle: {
-    fontSize: 8,
+    fontSize: 14,
+    padding: "5%",
+    alignSelf: "center",
+    // justifyContent: "center",
     fontWeight: "200",
     color: "#1B5E20",
   },
