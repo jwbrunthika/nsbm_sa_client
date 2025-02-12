@@ -97,7 +97,7 @@ export default function HomeScreen() {
           <Ionicons name="grid" size={24} color="#1B5E20" onPress={() => router.push('/service-menu')} />
         </View>
           <Text style={styles.greeting}>
-            Welcome back, {userData?.full_name || "User"} !
+          Welcome back, {userData?.full_name?.split(' ')[0] || "User"}!
           </Text>
           <View style={styles.profileIcon}>
           <Ionicons name="person" size={24} color="#1B5E20" onPress={() => router.push('/service-menu')} />
