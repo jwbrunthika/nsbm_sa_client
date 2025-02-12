@@ -200,6 +200,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: "500",
     color: "#1B5E20",
+    justifyContent: "flex-end",
   },
   profileIcon: {
     alignItems: "center",
