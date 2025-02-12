@@ -287,19 +287,19 @@ const styles = StyleSheet.create({
     width: "100%",
     borderColor: "#DCEDC8",
     alignItems: "center",
+    justifyContent: "flex-end"
   },
   newsCard: {
     backgroundColor: "#DCEDC8",
     width: "48%",
     height: "100%",
     borderRadius: 8,
+    justifyContent: "center",
     alignItems: "center",
-    justifyContent: "flex-end"
 
   },
   newsTitle: {
     fontSize: 14,
-    padding: "5%",
     alignSelf: "center",
     // justifyContent: "center",
     fontWeight: "200",
