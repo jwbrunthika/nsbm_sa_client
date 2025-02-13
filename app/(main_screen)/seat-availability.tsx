@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import {Link, router} from 'expo-router';
-
 import {
   StyleSheet,
   Text,
@@ -18,6 +17,8 @@ import fetchData from "../services/fetcher";
 import Toast from "react-native-toast-message";
 import caraouselComponent from "@/components/textnimageCaraousel";
 import { Ionicons } from "@expo/vector-icons";
+import FacultyCard from "@/components/facultyCard";
+import TopNavigationComponent from "@/components/topNavigationComponent";
 
 const width = Dimensions.get("window").width;
 const defaultDataWith6Colors = [
@@ -42,23 +43,22 @@ export default function SeatStuff() {
         if (key) {
           const isApiValid = await checkApiValid(key);
           setIsLoggedIn(true);
-          if (isApiValid) {
-            const result = await fetchData("news", key);
-            const dataResult = await fetchData("users", key);
+          // if (isApiValid) {
+          //   // const dataResult = await fetchData("users", key);
             
-            if (Array.isArray(dataResult) && dataResult.length > 0) {
-              setUserData(dataResult[0]); // Use the first user object
-            }
-            console.log(dataResult)
+          //   // if (Array.isArray(dataResult) && dataResult.length > 0) {
+          //   //   setUserData(dataResult[0]); // Use the first user object
+          //   // }
+          //   // console.log(dataResult)
             
-            setNewsData(result);
-          } else {
-            Toast.show({
-              type: "error",
-              position: "bottom",
-              text1: "Session Expired !",
-            });
-          }
+          //   // setNewsData(result);
+          // } else {
+          //   Toast.show({
+          //     type: "error",
+          //     position: "bottom",
+          //     text1: "Session Expired !",
+          //   });
+          // }
         } else {
           router.replace('/(auth)/sign-in');
         }
@@ -91,10 +91,46 @@ export default function SeatStuff() {
   return (
     <>
       <Stack.Screen options={{ headerShown: false }} />
-      <ScrollView style={styles.container}>
-        
+      <TopNavigationComponent title={"Seat Availability"} subtitle={""} navigateTo={"/"} />
+      <ScrollView 
+        style={styles.container}
+        contentContainerStyle={styles.scrollContent} // Added this
+      >
+        <FacultyCard
+          style={styles.factCard}
+          imageSource={require('@/assets/images/faculty_b.png')}
+          title="Faculty Of Business"
+          subtitle="(FOB)"
+          tintColor="rgba(0, 0, 0, 0.5)"
+          onPress={() => alert('Faculty Card Pressed')}
+        />
 
-        
+        <FacultyCard
+          style={styles.factCard}
+          imageSource={require('@/assets/images/faculty_c.png')}
+          title="Faculty Of Computing"
+          subtitle="(FOB)"
+          tintColor="rgba(0, 0, 0, 0.5)"
+          onPress={() => alert('Faculty Card Pressed')}
+        />
+
+        <FacultyCard
+          style={styles.factCard}
+          imageSource={require('@/assets/images/faculty_e.png')}
+          title="Faculty Of Engineering"
+          subtitle="(FOB)"
+          tintColor="rgba(0, 0, 0, 0.5)"
+          onPress={() => alert('Faculty Card Pressed')}
+        />
+
+        <FacultyCard
+          style={styles.factCard}
+          imageSource={require('@/assets/images/library.png')}
+          title="Library"
+          subtitle=""
+          tintColor="rgba(0, 0, 0, 0.5)"
+          onPress={() => alert('Faculty Card Pressed')}
+        />
       </ScrollView>
     </>
   );
@@ -103,24 +139,12 @@ export default function SeatStuff() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    position:"absolute",
     backgroundColor: "#FFFFF",
   },
-  header: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    borderBottomLeftRadius: 10,
-    borderBottomRightRadius: 10,
-    padding: 16,
-    backgroundColor: "#AFD9AF",
-  },
-  Headings: {
-    paddingTop: "2%",
-    fontSize: 15,
-    fontWeight: "300",
-    color: "#1B5E20",
-    alignSelf: "center",
+  scrollContent: {
+    flexGrow: 1,
+    justifyContent: 'center',  // Center vertically
+    alignItems: 'center',      // Center horizontally
   },
   greeting: {
     fontSize: 18,
@@ -149,90 +173,8 @@ const styles = StyleSheet.create({
     backgroundColor: "rgba(144, 238, 144, 0.3)", // light green with 30% opacity
     borderRadius: 10,
   },
+  factCard: {
+    alignSelf: 'center',
+  }
 
-  carouselItem: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  carouselImage: {
-    width: "90%",
-    height: "95%",
-    borderRadius: 12,
-  },
-  newsCarouselImage: {
-    width: "95%",
-    height: "95%",
-    borderRadius: 12,
-  },
-  imageWrapper: {
-    position: "relative",
-    width: "90%",
-    height: "95%",
-    borderRadius: 12,
-    overflow: "hidden", // ensures the tint respects the border radius
-  },
-  tintOverlay: {
-    padding: 16,
-    ...StyleSheet.absoluteFillObject, // covers the entire image
-    backgroundColor: "rgba(144, 238, 144, 0.3)", // light green with 30% opacity
-  },
-  subtitle: {
-    paddingTop: "2%",
-    textAlign: "center",
-    fontSize: 16,
-    fontStyle: "italic",
-    fontWeight: "300",
-    color: "#388E3C",
-    marginBottom: 16,
-  },
-  card: {
-    backgroundColor: "#d6e1ed",
-    height: "10%",
-    width: "90%",
-    alignSelf: "center",
-    alignItems: "center",
-    justifyContent: "center",
-    borderRadius: 8,
-    marginHorizontal: 16,
-    marginBottom: 16,
-  },
-  cardText: {
-    fontSize: 16,
-    alignItems: "center",
-    justifyContent: "center",
-    fontWeight: "200",
-    color: "#0D47A1",
-  },
-  sectionTitle: {
-    fontSize: 18,
-    fontWeight: "bold",
-    color: "#1B5E20",
-    paddingHorizontal: 16,
-    marginBottom: 8,
-  },
-  newsContainer: {
-    width: "100%",
-    borderColor: "#DCEDC8",
-    alignItems: "center",
-  },
-  newsCard: {
-    backgroundColor: "#DCEDC8",
-    width: "48%",
-    height: "100%",
-    borderRadius: 8,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  newsTitle: {
-    fontSize: 14,
-    padding: "2%",
-    alignSelf: "center",
-    fontWeight: "200",
-    color: "#1B5E20",
-  },
-  newsDate: {
-    fontSize: 14,
-    color: "#558B2F",
-  },
 });
