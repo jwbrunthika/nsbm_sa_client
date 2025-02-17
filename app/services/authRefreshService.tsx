@@ -24,6 +24,7 @@ export default async function authRefresh() {
     const data = await response.json();
     const apiKey = data.access_token;
     await AsyncStorage.setItem("apiKey", apiKey);
+    return 2012
   } catch (error) {
     console.log("Error checking API validity:", error);
     return false; // Return false if there's any error

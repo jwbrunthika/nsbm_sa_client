@@ -34,32 +34,22 @@ export default function HomeScreen() {
   const [newsData, setNewsData] = useState([]);
   const [userData, setUserData] = useState([]);
   const progress = useSharedValue(0);
-  const full_name = "Loading...";
+  const [fullName, setFullName] = useState("Loading...");
 
   useEffect(() => {
     const validateLogin = async () => {
       try {
         const key = await AsyncStorage.getItem("apiKey");
         if (key) {
-          // const isApiValid = await authRefresh();
-          const isApiValid = true;
-          setIsLoggedIn(true);
-          if (isApiValid) {
-            const full_name = await AsyncStorage.getItem("full_name");
-            console.log("Name");
-            console.log(await AsyncStorage.getItem("full_name"));
-            console.log(dataResult);
+          const stat = await authRefresh();
+          if (stat == 2012) {
+            console.log("Logged in");
+            setIsLoggedIn(true);
+            const storedName = await AsyncStorage.getItem("full_name");
+            setFullName(storedName || "User"); // Set full name state
+            // console.log("Name:", storedName);
+  
             const result = await fetchData("news", key);
-            // const refresher = await authRefresh();
-            console.log("RrefresherOutput");
-            console.log(refresher);
-            // const dataResult = await fetchData("users", key);
-
-            // if (Array.isArray(dataResult) && dataResult.length > 0) {
-            //   setUserData(dataResult[0]); // Use the first user object
-            // }
-            // setUserData(await AsyncStorage.getItem("full_name", full_name));
-
             setNewsData(result);
           } else {
             Toast.show({
@@ -80,10 +70,10 @@ export default function HomeScreen() {
         });
       }
     };
-
+  
     validateLogin();
   }, []);
-
+  
   if (!isLoggedIn) {
     return null; // Avoid rendering anything if not logged in
   }
@@ -110,7 +100,7 @@ export default function HomeScreen() {
             />
           </View>
           <Text style={styles.greeting}>
-            Welcome back, {full_name.split(" ")[0] || "User"} !
+            Welcome back, {fullName.split(" ")[0] || "User"} !
           </Text>
           <View style={styles.profileIcon}>
             <Ionicons

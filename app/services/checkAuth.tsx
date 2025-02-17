@@ -1,8 +1,15 @@
+import React, { useState } from "react";
 import SERVER_ADDRESS from "@/config";
 import {Link, router} from 'expo-router';
 
 export default async function checkApiValid(apiKey) {
+  const [mail, setMail] = useState("");
+  const [password, setPassword] = useState("");
+
   try {
+
+    // Get Email and Password from local storage
+
     const response = await fetch(`${SERVER_ADDRESS}/data/users/fetch`, {
       method: "GET",
       headers: {
