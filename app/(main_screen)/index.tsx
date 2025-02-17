@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import {Link, router} from 'expo-router';
+import { Link, router } from "expo-router";
 
 import {
   StyleSheet,
@@ -12,12 +12,12 @@ import {
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Carousel, { Pagination } from "react-native-reanimated-carousel";
 import { useSharedValue } from "react-native-reanimated";
-import checkApiValid from "../services/checkAuth";
 import { Stack } from "expo-router";
 import fetchData from "../services/fetcher";
 import Toast from "react-native-toast-message";
 import caraouselComponent from "@/components/textnimageCaraousel";
 import { Ionicons } from "@expo/vector-icons";
+import authRefresh from "../services/authRefreshService";
 
 const width = Dimensions.get("window").width;
 const defaultDataWith6Colors = [
@@ -34,23 +34,32 @@ export default function HomeScreen() {
   const [newsData, setNewsData] = useState([]);
   const [userData, setUserData] = useState([]);
   const progress = useSharedValue(0);
+  const full_name = "Loading...";
 
   useEffect(() => {
     const validateLogin = async () => {
       try {
         const key = await AsyncStorage.getItem("apiKey");
         if (key) {
-          const isApiValid = await checkApiValid(key);
+          // const isApiValid = await authRefresh();
+          const isApiValid = true;
           setIsLoggedIn(true);
           if (isApiValid) {
+            const full_name = await AsyncStorage.getItem("full_name");
+            console.log("Name");
+            console.log(await AsyncStorage.getItem("full_name"));
+            console.log(dataResult);
             const result = await fetchData("news", key);
-            const dataResult = await fetchData("users", key);
-            
-            if (Array.isArray(dataResult) && dataResult.length > 0) {
-              setUserData(dataResult[0]); // Use the first user object
-            }
-            console.log(dataResult)
-            
+            // const refresher = await authRefresh();
+            console.log("RrefresherOutput");
+            console.log(refresher);
+            // const dataResult = await fetchData("users", key);
+
+            // if (Array.isArray(dataResult) && dataResult.length > 0) {
+            //   setUserData(dataResult[0]); // Use the first user object
+            // }
+            // setUserData(await AsyncStorage.getItem("full_name", full_name));
+
             setNewsData(result);
           } else {
             Toast.show({
@@ -60,7 +69,7 @@ export default function HomeScreen() {
             });
           }
         } else {
-          router.replace('/(auth)/sign-in');
+          router.replace("/(auth)/sign-in");
         }
       } catch (error) {
         console.log("Error checking login status:", error);
@@ -71,10 +80,9 @@ export default function HomeScreen() {
         });
       }
     };
-  
+
     validateLogin();
   }, []);
-  
 
   if (!isLoggedIn) {
     return null; // Avoid rendering anything if not logged in
@@ -93,14 +101,24 @@ export default function HomeScreen() {
       <Stack.Screen options={{ headerShown: false }} />
       <ScrollView style={styles.container}>
         <View style={styles.header}>
-        <View style={styles.ServicesMenu}>
-          <Ionicons name="grid" size={24} color="#1B5E20" onPress={() => router.push('/seat-availability')} />
-        </View>
+          <View style={styles.ServicesMenu}>
+            <Ionicons
+              name="grid"
+              size={24}
+              color="#1B5E20"
+              onPress={() => router.push("/seat-availability")}
+            />
+          </View>
           <Text style={styles.greeting}>
-          Welcome back, {userData?.full_name?.split(' ')[0] || "User"} !
+            Welcome back, {full_name.split(" ")[0] || "User"} !
           </Text>
           <View style={styles.profileIcon}>
-          <Ionicons name="person" size={24} color="#1B5E20" onPress={() => router.push('/seat-availability')} />
+            <Ionicons
+              name="person"
+              size={24}
+              color="#1B5E20"
+              onPress={() => router.push("/(auth)/sign-in")}
+            />
           </View>
         </View>
 
@@ -120,8 +138,15 @@ export default function HomeScreen() {
           renderItem={({ item, index }) => (
             <View style={styles.carouselItem}>
               <Image source={{ uri: item }} style={styles.carouselImage} />
-              <Text style={[styles.Headings, index === 0 && { fontStyle: 'italic' , fontWeight: 'bold'}]}>
-                {index === 0 ? '"Connecting Campus Life, One App at a Time."' : 'Clicks by Community'}
+              <Text
+                style={[
+                  styles.Headings,
+                  index === 0 && { fontStyle: "italic", fontWeight: "bold" },
+                ]}
+              >
+                {index === 0
+                  ? '"Connecting Campus Life, One App at a Time."'
+                  : "Clicks by Community"}
               </Text>
             </View>
           )}
@@ -135,7 +160,9 @@ export default function HomeScreen() {
 
         <Text style={styles.sectionTitle}>Events & Stalls</Text>
         <View style={styles.card}>
-          <Text style={styles.cardText}>Oops... !, you caught us working on this</Text>
+          <Text style={styles.cardText}>
+            Oops... !, you caught us working on this
+          </Text>
         </View>
 
         <Text style={styles.sectionTitle}>Latest News</Text>
@@ -177,7 +204,7 @@ export default function HomeScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    position:"absolute",
+    position: "absolute",
     backgroundColor: "#FFFFF",
   },
   header: {
@@ -217,7 +244,7 @@ const styles = StyleSheet.create({
     height: 40,
     borderRadius: 5,
     backgroundColor: "#C8E6C9",
-  },  
+  },
   tintOverlay: {
     ...StyleSheet.absoluteFillObject, // fills the image's dimensions
     backgroundColor: "rgba(144, 238, 144, 0.3)", // light green with 30% opacity

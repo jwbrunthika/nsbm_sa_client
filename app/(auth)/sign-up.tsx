@@ -15,7 +15,6 @@ import SERVER_ADDRESS from "@/config";
 import Toast from "react-native-toast-message"; // Add Toast library
 import { Stack } from "expo-router";
 
-
 const SignUpScreen = () => {
   // const router = useRouter();
   const [mail, setMail] = useState("");
@@ -70,6 +69,12 @@ const SignUpScreen = () => {
         text1: "Registration Successful !",
       });
       storeData("apiKey", data.access_token);
+      storeData("full_name", name);
+      storeData("email", mail);
+      storeData("phone_number", phone);
+      storeData("user_type", signType);
+      storeData("password", password);
+
       // console.error(apiKey);
 
       // router.push("/"); // Navigate to the next screen after successful login

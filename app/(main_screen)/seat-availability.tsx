@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import {Link, router} from 'expo-router';
+import { Link, router } from "expo-router";
 import {
   StyleSheet,
   Text,
@@ -11,7 +11,7 @@ import {
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Carousel, { Pagination } from "react-native-reanimated-carousel";
 import { useSharedValue } from "react-native-reanimated";
-import checkApiValid from "../services/checkAuth";
+import authRefresh from "../services/authRefreshService";
 import { Stack } from "expo-router";
 import fetchData from "../services/fetcher";
 import Toast from "react-native-toast-message";
@@ -41,16 +41,16 @@ export default function SeatStuff() {
       try {
         const key = await AsyncStorage.getItem("apiKey");
         if (key) {
-          const isApiValid = await checkApiValid(key);
+          const isApiValid = await authRefresh();
           setIsLoggedIn(true);
           // if (isApiValid) {
           //   // const dataResult = await fetchData("users", key);
-            
+
           //   // if (Array.isArray(dataResult) && dataResult.length > 0) {
           //   //   setUserData(dataResult[0]); // Use the first user object
           //   // }
           //   // console.log(dataResult)
-            
+
           //   // setNewsData(result);
           // } else {
           //   Toast.show({
@@ -60,7 +60,7 @@ export default function SeatStuff() {
           //   });
           // }
         } else {
-          router.replace('/(auth)/sign-in');
+          router.replace("/(auth)/sign-in");
         }
       } catch (error) {
         console.log("Error checking login status:", error);
@@ -71,10 +71,9 @@ export default function SeatStuff() {
         });
       }
     };
-  
+
     validateLogin();
   }, []);
-  
 
   if (!isLoggedIn) {
     return null; // Avoid rendering anything if not logged in
@@ -91,45 +90,49 @@ export default function SeatStuff() {
   return (
     <>
       <Stack.Screen options={{ headerShown: false }} />
-      <TopNavigationComponent title={"Seat Availability"} subtitle={""} navigateTo={"/"} />
-      <ScrollView 
+      <TopNavigationComponent
+        title={"Seat Availability"}
+        subtitle={""}
+        navigateTo={"/"}
+      />
+      <ScrollView
         style={styles.container}
         contentContainerStyle={styles.scrollContent} // Added this
       >
         <FacultyCard
           style={styles.factCard}
-          imageSource={require('@/assets/images/faculty_b.png')}
+          imageSource={require("@/assets/images/faculty_b.png")}
           title="Faculty Of Business"
           subtitle="(FOB)"
           tintColor="rgba(0, 0, 0, 0.5)"
-          onPress={() => alert('Faculty Card Pressed')}
+          onPress={() => alert("Faculty Card Pressed")}
         />
 
         <FacultyCard
           style={styles.factCard}
-          imageSource={require('@/assets/images/faculty_c.png')}
+          imageSource={require("@/assets/images/faculty_c.png")}
           title="Faculty Of Computing"
           subtitle="(FOB)"
           tintColor="rgba(0, 0, 0, 0.5)"
-          onPress={() => alert('Faculty Card Pressed')}
+          onPress={() => alert("Faculty Card Pressed")}
         />
 
         <FacultyCard
           style={styles.factCard}
-          imageSource={require('@/assets/images/faculty_e.png')}
+          imageSource={require("@/assets/images/faculty_e.png")}
           title="Faculty Of Engineering"
           subtitle="(FOB)"
           tintColor="rgba(0, 0, 0, 0.5)"
-          onPress={() => alert('Faculty Card Pressed')}
+          onPress={() => alert("Faculty Card Pressed")}
         />
 
         <FacultyCard
           style={styles.factCard}
-          imageSource={require('@/assets/images/library.png')}
+          imageSource={require("@/assets/images/library.png")}
           title="Library"
           subtitle=""
           tintColor="rgba(0, 0, 0, 0.5)"
-          onPress={() => alert('Faculty Card Pressed')}
+          onPress={() => alert("Faculty Card Pressed")}
         />
       </ScrollView>
     </>
@@ -143,8 +146,8 @@ const styles = StyleSheet.create({
   },
   scrollContent: {
     flexGrow: 1,
-    justifyContent: 'center',  // Center vertically
-    alignItems: 'center',      // Center horizontally
+    justifyContent: "center", // Center vertically
+    alignItems: "center", // Center horizontally
   },
   greeting: {
     fontSize: 18,
@@ -167,14 +170,13 @@ const styles = StyleSheet.create({
     height: 40,
     borderRadius: 5,
     backgroundColor: "#C8E6C9",
-  },  
+  },
   tintOverlay: {
     ...StyleSheet.absoluteFillObject, // fills the image's dimensions
     backgroundColor: "rgba(144, 238, 144, 0.3)", // light green with 30% opacity
     borderRadius: 10,
   },
   factCard: {
-    alignSelf: 'center',
-  }
-
+    alignSelf: "center",
+  },
 });

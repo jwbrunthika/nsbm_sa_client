@@ -11,10 +11,8 @@ import CustomText from "@/components/CustomText";
 // import { useRouter } from "expo-router";
 import Toast from "react-native-toast-message"; // Add Toast library
 import SERVER_ADDRESS from "@/config";
-import {Link, router} from 'expo-router';
+import { Link, router } from "expo-router";
 import { Stack } from "expo-router";
-
-
 
 const SignInScreen = () => {
   // const router = useRouter();
@@ -26,7 +24,7 @@ const SignInScreen = () => {
       email: mail,
       password: password,
     };
-  
+
     try {
       const response = await fetch(`${SERVER_ADDRESS}/auth/login`, {
         method: "POST",
@@ -35,29 +33,38 @@ const SignInScreen = () => {
         },
         body: JSON.stringify(credentials),
       });
-  
+
       if (!response.ok) {
-        throw new Error("Login failed");
+        throw new Error("Login failed", response.statusText);
       }
-  
+
       const data = await response.json();
       const apiKey = data.access_token;
-  
+      const full_name = data.full_name;
+      const email = data.email;
+      const phone_number = data.phone_number;
+      const user_type = data.user_type;
+      // const password = password;
       // Delete existing API key before setting the new one
       await AsyncStorage.removeItem("apiKey");
-  
+
       // Store the new API key
       await AsyncStorage.setItem("apiKey", apiKey);
-  
+      await AsyncStorage.setItem("full_name", full_name);
+      await AsyncStorage.setItem("email", email);
+      await AsyncStorage.setItem("phone_number", phone_number);
+      await AsyncStorage.setItem("user_type", user_type);
+      await AsyncStorage.setItem("password", password);
+
       Toast.show({
         type: "success",
         position: "top",
         text1: "API Key",
         text2: apiKey,
       });
-      router.replace('/')
+      router.replace("/");
       // console.error(apiKey);
-  
+
       // router.push("/"); // Navigate to the next screen after successful login
     } catch (error) {
       console.error("Login error:", error);
@@ -68,10 +75,8 @@ const SignInScreen = () => {
       });
     }
   };
-  
 
   return (
-    
     <View style={styles.container}>
       <Image
         source={require("../../assets/images/nsbm_logo.png")}
@@ -107,14 +112,16 @@ const SignInScreen = () => {
 
           <TouchableOpacity
             style={[styles.button, styles.googleButton]}
-            onPress={() => router.replace('/')}
+            onPress={() => router.replace("/(auth)/sign-up.tsx")}
           >
-            <CustomText style={styles.googlebuttonText}>Microsoft Login</CustomText>
+            <CustomText style={styles.googlebuttonText}>Sign Up</CustomText>
           </TouchableOpacity>
         </View>
 
         <TouchableOpacity>
-          <CustomText style={styles.forgotPassword}>Forgot Password?</CustomText>
+          <CustomText style={styles.forgotPassword}>
+            Forgot Password?
+          </CustomText>
         </TouchableOpacity>
       </View>
 
@@ -162,7 +169,7 @@ const styles = StyleSheet.create({
   input: {
     backgroundColor: "#ffffff",
     padding: 10,
-    fontSize: 30,
+    fontSize: 20,
     fontStyle: "italic",
     fontWeight: "100",
     borderRadius: 8,
