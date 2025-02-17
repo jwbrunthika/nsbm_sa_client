@@ -39,6 +39,7 @@ const SignInScreen = () => {
       }
 
       const data = await response.json();
+      console.log(data);
       const apiKey = data.access_token;
       const full_name = data.full_name;
       const email = data.email;
