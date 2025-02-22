@@ -19,6 +19,7 @@ import caraouselComponent from "@/components/textnimageCaraousel";
 import { Ionicons } from "@expo/vector-icons";
 import FacultyCard from "@/components/facultyCard";
 import TopNavigationComponent from "@/components/topNavigationComponent";
+import SeatDisplayBox from "@/components/seatDisplay";
 
 const width = Dimensions.get("window").width;
 const defaultDataWith6Colors = [
@@ -48,7 +49,7 @@ export default function SeatStuff() {
             const storedName = await AsyncStorage.getItem("full_name");
             // setFullName(storedName || "User"); // Set full name state
             // console.log("Name:", storedName);
-  
+
             const result = await fetchData("news", key);
             setNewsData(result);
           } else {
@@ -70,7 +71,7 @@ export default function SeatStuff() {
         });
       }
     };
-  
+
     validateLogin();
   }, []);
 
@@ -109,24 +110,16 @@ export default function SeatStuff() {
     <>
       <Stack.Screen options={{ headerShown: false }} />
       <TopNavigationComponent
-        title={"Seat Availability"}
+        title={"Seat Availability FOC"}
         subtitle={""}
         navigateTo={"/"}
       />
       <ScrollView
         style={styles.container}
-        contentContainerStyle={styles.scrollContent} // Added this
+        contentContainerStyle={styles.scrollContent}
       >
         {facultyData.map((faculty, index) => (
-          <FacultyCard
-            key={index}
-            style={styles.factCard}
-            imageSource={faculty.imageSource}
-            title={faculty.title}
-            subtitle={faculty.subtitle}
-            tintColor="rgba(0, 0, 0, 0.5)"
-            onPress={faculty.onPress}
-          />
+          <SeatDisplayBox />
         ))}
       </ScrollView>
     </>

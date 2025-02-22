@@ -48,7 +48,7 @@ export default function HomeScreen() {
             const storedName = await AsyncStorage.getItem("full_name");
             setFullName(storedName || "User"); // Set full name state
             // console.log("Name:", storedName);
-  
+
             const result = await fetchData("news", key);
             setNewsData(result);
           } else {
@@ -70,10 +70,10 @@ export default function HomeScreen() {
         });
       }
     };
-  
+
     validateLogin();
   }, []);
-  
+
   if (!isLoggedIn) {
     return null; // Avoid rendering anything if not logged in
   }
@@ -96,7 +96,7 @@ export default function HomeScreen() {
               name="grid"
               size={24}
               color="#1B5E20"
-              onPress={() => router.push("/seat-availability")}
+              onPress={() => router.push("/service-menu")}
             />
           </View>
           <Text style={styles.greeting}>

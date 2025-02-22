@@ -48,7 +48,7 @@ export default function SeatStuff() {
             const storedName = await AsyncStorage.getItem("full_name");
             // setFullName(storedName || "User"); // Set full name state
             // console.log("Name:", storedName);
-  
+
             const result = await fetchData("news", key);
             setNewsData(result);
           } else {
@@ -70,7 +70,7 @@ export default function SeatStuff() {
         });
       }
     };
-  
+
     validateLogin();
   }, []);
 
@@ -83,7 +83,7 @@ export default function SeatStuff() {
       imageSource: require("@/assets/images/faculty_b.png"),
       title: "Faculty Of Business",
       subtitle: "(FOB)",
-      onPress: () => router.push("/seat-availability-main"),
+      onPress: () => router.push("/seat-availability"),
     },
     {
       imageSource: require("@/assets/images/faculty_c.png"),
