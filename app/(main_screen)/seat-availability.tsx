@@ -98,12 +98,6 @@ export default function SeatStuff() {
       subtitle: "(FOB)",
       onPress: () => alert("Faculty Card Pressed"),
     },
-    {
-      imageSource: require("@/assets/images/library.png"),
-      title: "Library",
-      subtitle: "",
-      onPress: () => alert("Faculty Card Pressed"),
-    },
   ];
 
   return (
@@ -119,7 +113,7 @@ export default function SeatStuff() {
         contentContainerStyle={styles.scrollContent}
       >
         {facultyData.map((faculty, index) => (
-          <SeatDisplayBox imageSource={require("@/assets/images/finagle.png")} title="Finagle Cafeteria" seatAvailability={0}/>
+          <SeatDisplayBox imageSource={require("@/assets/images/finagle.png")} title="Cafeteria" seatAvailability={0}/>
         ))}
       </ScrollView>
     </>

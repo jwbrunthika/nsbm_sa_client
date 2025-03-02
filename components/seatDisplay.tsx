@@ -9,7 +9,8 @@ const SeatDisplayBox = ({ imageSource, title, seatAvailability, onPress }) => {
       </View>
       <View style={styles.infoContainer}>
         <Text style={styles.title}>{title}</Text>
-        <Text style={styles.seatAvailability}>{seatAvailability} Seat Availability</Text>
+        <Text style={styles.seatNumber}>{seatAvailability}</Text>
+        <Text style={styles.seatText}>Seat Availability</Text>
       </View>
     </TouchableOpacity>
   );
@@ -18,41 +19,53 @@ const SeatDisplayBox = ({ imageSource, title, seatAvailability, onPress }) => {
 const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: '#F1F1F1',
+    backgroundColor: '#F3F4F6',
     borderRadius: 10,
     marginVertical: 10,
-    padding: 10,
-    shadowColor: '#000',
-    shadowOpacity: 0.1,
-    shadowOffset: { width: 0, height: 2 },
-    shadowRadius: 5,
-    elevation: 2,
-    width: '90%',
+    width: '95%',
+    height: "30%",
     alignSelf: 'center',
+    elevation: 2,
   },
   imageContainer: {
-    flex: 1,
-    justifyContent: 'center',
+    flex: 1.2,
+    borderTopLeftRadius: 10,
+    borderBottomLeftRadius: 10,
+    // width: '50%',
     alignItems: 'center',
+    justifyContent: 'center',
+    // height: '50%',
+    overflow: 'hidden',
   },
   image: {
-    width: 80,
-    height: 80,
-    borderRadius: 40,
+    width: '100%',
+    height: '100%',
+    resizeMode: 'cover',
   },
   infoContainer: {
-    flex: 2,
-    paddingLeft: 10,
+    flex: 1,
+    // height: "50%",
+    justifyContent: 'center',
+    alignItems: 'center',
+    // padding: 10,
+    backgroundColor: '#E5E7EB',
+    borderTopRightRadius: 10,
+    borderBottomRightRadius: 10,
   },
   title: {
     fontSize: 18,
-    fontWeight: 'bold',
-    color: '#333',
+    fontWeight: '300',
+    color: '#1F2937',
+    marginBottom: 8,
   },
-  seatAvailability: {
-    fontSize: 16,
-    color: '#555',
+  seatNumber: {
+    fontSize: 36,
+    fontWeight: '300',
+    color: '#374151',
+  },
+  seatText: {
+    fontSize: 14,
+    color: '#6B7280',
   },
 });
 

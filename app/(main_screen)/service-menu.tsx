@@ -19,37 +19,37 @@ const menuItems = [
   {
     title: "Events",
     icon: "calendar-alt",
-    color: "#4CAF50", // Light Green
+    color: "#1B5E20", // Light Green
     navigateTo: "/(main_screeen)/events",
   },
   {
     title: "Lectures",
     icon: "chalkboard-teacher",
-    color: "#388E3C", // Medium Green
+    color: "#0E3A63", // Medium Green
     navigateTo: "/(main_screen)/lectures",
   },
   {
     title: "Food",
     icon: "utensils",
-    color: "#2C6B3D", // Dark Green
+    color: "#2A6A6C", // Dark Green
     navigateTo: "/(main_screen)/food",
   },
   {
     title: "University Map",
     icon: "map-marked-alt",
-    color: "#8BC34A", // Light Green with a yellowish tint
+    color: "#3C78D8", // Light Green with a yellowish tint
     navigateTo: "/(main_screen)/map",
   },
   {
     title: "Seat Availability",
     icon: "chair",
-    color: "#66BB6A", // Vibrant Green
+    color: "#A35324", // Vibrant Green
     navigateTo: "/(main_screen)/seat-availability-main",
   },
   {
     title: "Profile",
     icon: "user",
-    color: "#81C784", // Muted Green
+    color: "#5D85C2", // Muted Green
     navigateTo: "/(main_screen)/profile",
   },
   {
