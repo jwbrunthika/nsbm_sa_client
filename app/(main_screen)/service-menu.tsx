@@ -151,7 +151,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     flexWrap: "wrap",
     justifyContent: "center",
-    width: width * 0.95,
+    width: width * 0.96,
   },
   tile: {
     width: width * 0.45,
