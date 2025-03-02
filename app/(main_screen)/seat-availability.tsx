@@ -112,14 +112,14 @@ export default function SeatStuff() {
       <TopNavigationComponent
         title={"Seat Availability FOC"}
         subtitle={""}
-        navigateTo={"/"}
+        navigateTo={"/(main_screen)/seat-availability-main"}
       />
       <ScrollView
         style={styles.container}
         contentContainerStyle={styles.scrollContent}
       >
         {facultyData.map((faculty, index) => (
-          <SeatDisplayBox />
+          <SeatDisplayBox imageSource={require("@/assets/images/finagle.png")} title="Finagle Cafeteria" seatAvailability={0}/>
         ))}
       </ScrollView>
     </>

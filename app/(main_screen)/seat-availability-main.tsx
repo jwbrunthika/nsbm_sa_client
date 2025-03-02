@@ -111,7 +111,7 @@ export default function SeatStuff() {
       <TopNavigationComponent
         title={"Seat Availability"}
         subtitle={""}
-        navigateTo={"/"}
+        navigateTo={"/(main_screen)/service-menu"}
       />
       <ScrollView
         style={styles.container}

@@ -1,51 +1,58 @@
-import React, { useState } from "react";
-import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
+import React from 'react';
+import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native';
 
-const SeatDisplayBox = ({ title, onPress }) => {
-  const [isPressed, setIsPressed] = useState(false);
-
-  const handlePressIn = () => {
-    setIsPressed(true);
-  };
-
-  const handlePressOut = () => {
-    setIsPressed(false);
-  };
-
+const SeatDisplayBox = ({ imageSource, title, seatAvailability, onPress }) => {
   return (
-    <TouchableOpacity
-      onPress={onPress}
-      onPressIn={handlePressIn}
-      onPressOut={handlePressOut}
-      activeOpacity={0.7}
-    >
-      <View
-        style={[styles.box, { backgroundColor: isPressed ? "#555" : "#333" }]}
-      >
-        <Text style={styles.text}>{title}</Text>
+    <TouchableOpacity style={styles.container} onPress={onPress}>
+      <View style={styles.imageContainer}>
+        <Image source={imageSource} style={styles.image} />
+      </View>
+      <View style={styles.infoContainer}>
+        <Text style={styles.title}>{title}</Text>
+        <Text style={styles.seatAvailability}>{seatAvailability} Seat Availability</Text>
       </View>
     </TouchableOpacity>
   );
 };
 
 const styles = StyleSheet.create({
-  box: {
-    width: 150,
-    height: 150,
-    justifyContent: "center",
-    alignItems: "center",
-    alignSelf: "center",
+  container: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#F1F1F1',
     borderRadius: 10,
-    elevation: 5,
-    shadowColor: "#000",
+    marginVertical: 10,
+    padding: 10,
+    shadowColor: '#000',
+    shadowOpacity: 0.1,
     shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.3,
-    shadowRadius: 4,
+    shadowRadius: 5,
+    elevation: 2,
+    width: '90%',
+    alignSelf: 'center',
   },
-  text: {
-    color: "#fff",
+  imageContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  image: {
+    width: 80,
+    height: 80,
+    borderRadius: 40,
+  },
+  infoContainer: {
+    flex: 2,
+    paddingLeft: 10,
+  },
+  title: {
     fontSize: 18,
-    fontWeight: "bold",
+    fontWeight: 'bold',
+    color: '#333',
+  },
+  seatAvailability: {
+    fontSize: 16,
+    color: '#555',
   },
 });
 

@@ -17,7 +17,7 @@ export default function UniversityMap() {
       />
     <View style={styles.container}>
       <WebView
-        source={{ uri: "https://www.google.com/maps?q=NSBM+Green+University" }}
+        source={{ uri: "https://www.google.com/maps?q=NSBM+Green+University&t=k" }}
         style={styles.map}
       />
     </View>
