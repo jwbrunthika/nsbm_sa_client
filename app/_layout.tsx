@@ -10,6 +10,9 @@ export default function Layout() {
       <Stack.Screen name="/(main_screen)/service-menu" options={{ headerShown: false }} />
       <Stack.Screen name="/(main_screen)/seat-availability-main" options={{ headerShown: false }} />
       <Stack.Screen name="(main_screen)/map" />
+      <Stack.Screen name="(main_screen)/event-list" options={{ headerShown: false }} />
+      <Stack.Screen name="(main_screen)/event-details" options={{ headerShown: false }} />
+
     </Stack>
   );
 }
