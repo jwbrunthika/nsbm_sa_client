@@ -91,7 +91,7 @@ const SignUpScreen = () => {
 
   return (
     <View style={styles.container}>
-      {/* <Stack.Screen options={{ headerShown: false }} /> */}
+      <Stack.Screen options={{ headerShown: false }} />
       <Image
         source={require("../../assets/images/nsbm_logo.png")}
         style={styles.logo}

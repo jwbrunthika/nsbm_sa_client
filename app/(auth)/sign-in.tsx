@@ -113,7 +113,7 @@ const SignInScreen = () => {
 
           <TouchableOpacity
             style={[styles.button, styles.googleButton]}
-            onPress={() => router.replace("/(auth)/sign-up.tsx")}
+            onPress={() => router.replace("/(auth)/sign-up")}
           >
             <CustomText style={styles.googlebuttonText}>Sign Up</CustomText>
           </TouchableOpacity>
