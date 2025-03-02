@@ -84,7 +84,7 @@ const SignUpScreen = () => {
         type: "error",
         position: "top",
         text1: "Sign Up Failed",
-        text2: error,
+        text2: error instanceof Error ? error.message : String(error),
       });
     }
   };

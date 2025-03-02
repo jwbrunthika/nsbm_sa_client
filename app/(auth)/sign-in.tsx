@@ -35,7 +35,7 @@ const SignInScreen = () => {
       });
 
       if (!response.ok) {
-        throw new Error("Login failed", response.statusText);
+        throw new Error(`Login failed: ${response.statusText}`);
       }
 
       const data = await response.json();

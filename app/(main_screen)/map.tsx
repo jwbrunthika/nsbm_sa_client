@@ -1,7 +1,6 @@
 import React from "react";
 import { View, Text, StyleSheet } from "react-native";
 import { WebView } from "react-native-webview";
-import Ionicons from "react-native-vector-icons/Ionicons";
 import { Stack } from "expo-router";
 import TopNavigationComponent from "@/components/topNavigationComponent";
 

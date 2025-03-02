@@ -94,7 +94,7 @@ export default function ServiceMenu() {
           {menuItems.map((item, index) => (
             <TouchableOpacity
               key={index}
-              onPress={() => router.push(item.navigateTo)} // Handle navigation on press
+              onPress={() => router.push(item.navigateTo as any)} // Handle navigation on press
             >
               <Animated.View
                 style={[
