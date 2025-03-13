@@ -1,8 +1,18 @@
 import React, { useState } from "react";
-import { View, Text, ScrollView, TouchableOpacity, StyleSheet } from "react-native";
+import {
+  View,
+  Text,
+  ScrollView,
+  TouchableOpacity,
+  StyleSheet,
+} from "react-native";
 import { Calendar } from "react-native-calendars";
 import { Stack, useRouter } from "expo-router";
+import CustomText from "@/components/CustomText";
+
 import { Ionicons } from "@expo/vector-icons";
+import TopNavigationComponent from "@/components/topNavigationComponent";
+import EventSearchAndGallery from "@/components/eventsAndGallery";
 
 const events = [
   {
@@ -23,11 +33,12 @@ const events = [
 
 const EventList = () => {
   const router = useRouter();
-  const [markedDates, setMarkedDates] = useState<Record<string, { event: any }>>({});
+  const [markedDates, setMarkedDates] = useState<
+    Record<string, { event: any }>
+  >({});
 
-  // Example of updating marked dates
   const handleEventSelection = (selectedDate: string, selectedEvent: any) => {
-    if (!selectedDate) return; // Prevent undefined errors
+    if (!selectedDate) return;
     setMarkedDates((prev) => ({
       ...prev,
       [selectedDate]: { event: selectedEvent },
@@ -36,96 +47,130 @@ const EventList = () => {
 
   const goToEventDetails = (event: any) => {
     router.push({
-      pathname: "../app/(main_screen)/event-details",
-      params: { title: event.title, date: event.date, time: event.time, venue: event.venue },
+      pathname: "/(main_screen)/event-details",
+      params: {
+        title: "Test",
+        date: "Test",
+        time: "Test",
+        venue: "Test",
+      },
     });
   };
 
   return (
     <>
-    <Stack.Screen options={{ headerShown: false }} />
-    <ScrollView style={styles.container}>
-      <View style={styles.header}>
-        <View style={styles.ServicesMenu}>
-          <Ionicons
-            name="grid"
-            size={24}
-            color="#1B5E20"
-            onPress={() => router.push("/service-menu")}
-          />
-        </View>
-      </View>
-      <Text style={styles.header}>Events and Stalls</Text>
-
-
-      <Calendar
-        markedDates={markedDates}
-        onDayPress={(day) => {
-          const selectedEvent = events.find((e) => e.date === day.dateString);
-          if (selectedEvent) {
-            goToEventDetails(selectedEvent);
-          }
-        }}
-        dayComponent={({ date, state }) => {
-          if (!date?.dateString) return <View><Text>-</Text></View>; // Fallback in case date is undefined
-        
-          const event = events.find((e) => e.date === date.dateString);
-        
-          return (
-            <View>
-              <TouchableOpacity onPress={() => event && goToEventDetails(event)}>
-                <View style={[styles.eventCircle, event ? styles.eventHighlighted : {}]}>
-                  <Text style={[styles.calendarText, state === "disabled" ? { color: "gray" } : {}]}>
-                    {date.day ?? "-"} {/* Ensure `day` is not undefined */}
-                  </Text>
-                </View>
-              </TouchableOpacity>
-            </View>
-          );
-        }}
+      <Stack.Screen options={{ headerShown: false }} />
+      <TopNavigationComponent
+        title={"Events and Stalls"}
+        subtitle={""}
+        navigateTo={"/(main_screen)/service-menu"}
       />
+      <ScrollView style={styles.container}>
+        <EventSearchAndGallery />
 
-      
-    </ScrollView>
-  </>
+        {/* <View style={styles.headerContainer}>
+          <Text style={styles.header}>Set an event</Text>
+        </View> */}
+        <TouchableOpacity>
+          <CustomText style={styles.seeMore}>See More</CustomText>
+        </TouchableOpacity>
+
+        <Calendar
+          markedDates={markedDates}
+          onDayPress={(day) => {
+            const selectedEvent = events.find((e) => e.date === day.dateString);
+            if (selectedEvent) {
+              goToEventDetails(selectedEvent);
+            }
+          }}
+          dayComponent={({ date, state }) => {
+            if (!date?.dateString)
+              return (
+                <View>
+                  <Text>-</Text>
+                </View>
+              ); // Fallback in case date is undefined
+
+            const event = events.find((e) => e.date === date.dateString);
+
+            return (
+              <View>
+                <TouchableOpacity
+                  onPress={() => event && goToEventDetails(event)}
+                >
+                  <View
+                    style={[
+                      styles.eventCircle,
+                      event ? styles.eventHighlighted : {},
+                    ]}
+                  >
+                    <Text
+                      style={[
+                        styles.calendarText,
+                        state === "disabled" ? { color: "gray" } : {},
+                      ]}
+                    >
+                      {date.day ?? "-"} {/* Ensure `day` is not undefined */}
+                    </Text>
+                  </View>
+                </TouchableOpacity>
+              </View>
+            );
+          }}
+        />
+      </ScrollView>
+    </>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    position: "absolute",
+    // position: "absolute",
     backgroundColor: "#FFFFF",
   },
   header: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    borderBottomLeftRadius: 10,
-    borderBottomRightRadius: 10,
+    fontWeight: "300",
+    borderRadius: 10,
     padding: 16,
     backgroundColor: "#AFD9AF",
-  },  
-  eventCircle: { 
-    width: 30, 
-    height: 30, 
-    borderRadius: 15, 
-    justifyContent: "center", 
+  },
+  headerContainer: {
+    padding: "2%",
+  },
+  eventCircle: {
+    width: 30,
+    height: 30,
+    borderRadius: 15,
+    justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "rgb(144, 238, 144)" },
+    backgroundColor: "rgb(144, 238, 144)",
+  },
 
-  eventHighlighted: { 
-    backgroundColor: "orange" },
-    calendarText: { fontSize: 16 },
-    
+  eventHighlighted: {
+    backgroundColor: "orange",
+  },
+  calendarText: { fontSize: 16 },
+
   ServicesMenu: {
-      alignItems: "center",
-      justifyContent: "center", // This will vertically center the content
-      width: 40,
-      height: 40,
-      borderRadius: 5,
-      backgroundColor: "#C8E6C9",
-    },
+    alignItems: "center",
+    justifyContent: "center", // This will vertically center the content
+    // width: 40,
+    // height: 40,
+    borderRadius: 5,
+    backgroundColor: "#C8E6C9",
+  },
+  seeMore: {
+    textAlign: "center",
+    color: "#4CAF50",
+    margin: 2,
+    marginBottom: 10,
+    fontWeight: "200",
+    fontSize: 14,
+  },
 });
 
 export default EventList;

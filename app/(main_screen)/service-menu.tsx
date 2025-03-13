@@ -20,7 +20,7 @@ const menuItems = [
     title: "Events",
     icon: "calendar-alt",
     color: "#1B5E20", // Light Green
-    navigateTo: "/(main_screeen)/events",
+    navigateTo: "/(main_screen)/event-list",
   },
   {
     title: "Lectures",
@@ -84,11 +84,11 @@ export default function ServiceMenu() {
   return (
     <>
       <Stack.Screen options={{ headerShown: false }} />
-      <TopNavigationComponent
+      {/* <TopNavigationComponent
         title={"Welcome to Services"}
         subtitle={""}
         navigateTo={"/"}
-      />
+      /> */}
       <ScrollView contentContainerStyle={styles.scrollContent}>
         <View style={styles.gridContainer}>
           {menuItems.map((item, index) => (
@@ -155,7 +155,7 @@ const styles = StyleSheet.create({
   },
   tile: {
     width: width * 0.45,
-    height: height * 0.2,
+    height: height * 0.22,
     margin: 5,
     borderRadius: 10,
     alignItems: "center",
