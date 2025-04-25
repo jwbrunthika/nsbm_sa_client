@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react"; // Added useEffect
+import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
@@ -6,11 +6,12 @@ import {
   StyleSheet,
   TouchableOpacity,
   Alert,
+  ScrollView,
+  TextInput,
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import TopNavigationComponent from "@/components/topNavigationComponent";
-import { ScrollView } from "react-native";
-import { router } from "expo-router"; // Import router from expo-router
+import { router } from "expo-router";
 
 const UserProfile = () => {
   const [studentId, setStudentId] = useState("");
@@ -22,8 +23,8 @@ const UserProfile = () => {
   const [nic, setNic] = useState("");
   const [email, setEmail] = useState("");
   const [mobile, setMobile] = useState("");
+  const [isEditing, setIsEditing] = useState(false);
 
-  // Retrieve user data from AsyncStorage
   const getUserData = async () => {
     try {
       const studentId = await AsyncStorage.getItem("student_id");
@@ -49,20 +50,17 @@ const UserProfile = () => {
     }
   };
 
-  // Fetch data on component mount
   useEffect(() => {
     getUserData();
-  }, []); // Empty dependency array to run once on mount
+  }, []);
 
   const handleLogout = async () => {
     try {
-      await AsyncStorage.clear(); // Clear all AsyncStorage data
+      await AsyncStorage.clear();
       Alert.alert("Logged Out", "You have been logged out successfully.", [
         {
           text: "OK",
-          onPress: () => {
-            router.replace("/(auth)/sign-in"); // Navigate to login screen
-          },
+          onPress: () => router.replace("/(auth)/sign-in"),
         },
       ]);
     } catch (error) {
@@ -71,9 +69,39 @@ const UserProfile = () => {
     }
   };
 
+  const handleSave = async () => {
+    try {
+      await AsyncStorage.setItem("student_id", studentId);
+      await AsyncStorage.setItem("intake", intake);
+      await AsyncStorage.setItem("full_name", name);
+      await AsyncStorage.setItem("email", nsbmEmail);
+      await AsyncStorage.setItem("degree", degree);
+      await AsyncStorage.setItem("university", offeredBy);
+      await AsyncStorage.setItem("nic", nic);
+      await AsyncStorage.setItem("phone_number", mobile);
+      Alert.alert("Saved", "Your profile has been updated.");
+      setIsEditing(false);
+    } catch (error) {
+      console.error("Error saving user data:", error);
+      Alert.alert("Error", "Failed to save profile.");
+    }
+  };
+
+  const renderField = (label, value, setter, editable = true) => {
+    return isEditing && editable ? (
+      <TextInput
+        style={styles.textBox}
+        value={value}
+        onChangeText={setter}
+        placeholder={label}
+      />
+    ) : (
+      <Text style={styles.textBox}>{`${label}: ${value}`}</Text>
+    );
+  };
+
   return (
     <>
-    
       <TopNavigationComponent
         title={"User Profile"}
         subtitle={""}
@@ -86,19 +114,39 @@ const UserProfile = () => {
             style={styles.profileImage}
           />
           <View style={styles.infoContainer}>
-            <Text style={styles.textBox}>StudentID: {studentId}</Text>
-            <Text style={styles.textBox}>Intake: {intake}</Text>
-            <Text style={styles.textBox}>Name: {name}</Text>
-            <Text style={styles.textBox}>Email: {nsbmEmail}</Text>
-            <Text style={styles.textBox}>Degree: {degree}</Text>
-            <Text style={styles.textBox}>Offered By: {offeredBy}</Text>
-            <Text style={styles.textBox}>NIC: {nic}</Text>
-            <Text style={styles.textBox}>Email: {email}</Text>
-            <Text style={styles.textBox}>Mobile: {mobile}</Text>
+            {renderField("Student ID", studentId, setStudentId, false)}
+            {renderField("Intake", intake, setIntake, false)}
+            {renderField("Name", name, setName)}
+            {renderField("Email", nsbmEmail, setNsbmEmail)}
+            {renderField("Degree", degree, setDegree)}
+            {renderField("Offered By", offeredBy, setOfferedBy)}
+            {renderField("NIC", nic, setNic)}
+            {renderField("Mobile", mobile, setMobile)}
           </View>
-          <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
-            <Text style={styles.logoutText}>Log Out</Text>
-          </TouchableOpacity>
+
+          <View style={{ flexDirection: "row", marginTop: 20 }}>
+            <TouchableOpacity
+              style={[
+                styles.editButton,
+                { backgroundColor: isEditing ? "#5cb85c" : "#0275d8" },
+              ]}
+              onPress={() => {
+                if (isEditing) handleSave();
+                else setIsEditing(true);
+              }}
+            >
+              <Text style={styles.logoutText}>
+                {isEditing ? "Save" : "Edit"}
+              </Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              style={[styles.logoutButton, { marginLeft: 10 }]}
+              onPress={handleLogout}
+            >
+              <Text style={styles.logoutText}>Log Out</Text>
+            </TouchableOpacity>
+          </View>
         </View>
       </ScrollView>
     </>
@@ -143,7 +191,6 @@ const styles = StyleSheet.create({
     color: "#333",
   },
   logoutButton: {
-    marginTop: 20,
     backgroundColor: "#d9534f",
     paddingVertical: 12,
     paddingHorizontal: 25,
@@ -155,6 +202,12 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     textAlign: "center",
     fontSize: 16,
+  },
+  editButton: {
+    paddingVertical: 12,
+    paddingHorizontal: 25,
+    borderRadius: 8,
+    elevation: 2,
   },
 });
 
